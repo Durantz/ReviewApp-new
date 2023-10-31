@@ -1,10 +1,3 @@
-interface StarRating {
-  value: number;
-  onChange: (value: string) => void;
+export default function StarRating() {
+  return <p>Ciao</p>;
 }
-
-const StarRating: React.FC<StarRating> = ({ value, onChange }) => {
-  return <div>Ciao</div>;
-};
-
-export default StarRating;

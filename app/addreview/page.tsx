@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { StarRating } from "@/components/StarRating";
+import StarRating from "@/components/StarRating";
 
 const formSchema = z.object({
   restaurant: z.string().min(1, "Inserire il nome"),
