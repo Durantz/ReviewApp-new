@@ -22,16 +22,16 @@ const StarRating: React.FC<StarRating> = ({
 }) => {
   const [_rating, setRating] = useState(rating);
   const onClick = (value: number) => {
-    setRating(value);
+    // setRating(value);
     onChange(value);
   };
   const reset = () => {
-    setRating(0);
+    // setRating(0);
     onChange(0);
   };
   return (
     <div className="flex flex-row gap-0.5 ">
-      {!disabled && _rating > 0 ? (
+      {!disabled && rating > 0 ? (
         <Button
           type="button"
           size="icon"
@@ -58,7 +58,7 @@ const StarRating: React.FC<StarRating> = ({
             className={cn(className, "hover:animate-jump disabled:opacity-100")}
             onClick={() => onClick(index + 1)}
           >
-            {_rating >= index + 1 ? (
+            {rating >= index + 1 ? (
               <Star className="w-full h-full text-primary fill-primary" />
             ) : (
               <Star

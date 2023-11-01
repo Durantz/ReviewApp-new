@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import * as z from "zod";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -19,6 +19,9 @@ import { Button } from "@/components/ui/button";
 import StarRating from "@/components/StarRating";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import AnimatedCheckbox from "@/components/AnimatedCheckbox";
 
 const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
@@ -30,6 +33,7 @@ const formSchema = z.object({
 });
 
 export default function AddReview() {
+  const [sad, setSad] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -45,16 +49,13 @@ export default function AddReview() {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
+    form.reset({});
   };
 
   return (
     <div className="grid grid-flow-row gap-1 w-auto">
-      <Avatar className="w-16 h-16 rounded-full bg-slate-600 animate-none hover:animate-wiggle-more hover:animate-infinite">
-        <AvatarImage
-          src="/smiley-face-transparent-pictures-backgrounds-19.png"
-          className="object-contain scale-125"
-        />
-      </Avatar>
+      <AnimatedCheckbox checked={sad} onCheckedChange={() => setSad(!sad)} />
+      
       <Form {...form}>
         <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -68,7 +69,7 @@ export default function AddReview() {
                     placeholder="Da Totò Trattoria Rustica"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder-zinc-300 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       form.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
@@ -90,7 +91,7 @@ export default function AddReview() {
                     placeholder="Via degli Arbusti 10, Milano"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder-zinc-300 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       form.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
@@ -113,7 +114,7 @@ export default function AddReview() {
                       rating={field.value}
                       isError={Boolean(form.getFieldState(field.name).error)}
                       onChange={(value: number) => {
-                        form.setValue("rating", value, {
+                        form.setValue(field.name, value, {
                           shouldValidate: true,
                           shouldDirty: true,
                         });
@@ -135,7 +136,7 @@ export default function AddReview() {
                       rating={field.value}
                       isError={Boolean(form.getFieldState(field.name).error)}
                       onChange={(value: number) => {
-                        form.setValue("rating", value, {
+                        form.setValue(field.name, value, {
                           shouldValidate: true,
                           shouldDirty: true,
                         });
@@ -160,7 +161,7 @@ export default function AddReview() {
                     rating={field.value}
                     isError={Boolean(form.getFieldState(field.name).error)}
                     onChange={(value: number) => {
-                      form.setValue("rating", value, {
+                      form.setValue(field.name, value, {
                         shouldValidate: true,
                         shouldDirty: true,
                       });
