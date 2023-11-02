@@ -1,48 +1,69 @@
-"use client"
+"use client";
 
-import Image from 'next/image';
-import {motion, AnimatePresence} from 'framer-motion';
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { colors } from "tailwindcss/defaultTheme";
 
-interface AnimatedCheckbox{
-    checked: boolean;
-    onCheckedChange: () => void;
+interface AnimatedCheckbox {
+  checked: boolean;
+  onCheckedChange: () => void;
 }
 
-const AnimatedCheckbox: React.FC<AnimatedCheckbox> = ({checked, onCheckedChange}) => {
+const AnimatedCheckbox: React.FC<AnimatedCheckbox> = ({
+  checked,
+  onCheckedChange,
+}) => {
+  const onChange = () => {
+    onCheckedChange();
+  };
 
-    const onChange = () =>{
-        onCheckedChange()
-    }
-
-    return (
-        <AnimatePresence initial={false} mode="wait">
-          {checked ? (
-            <motion.div
-              className="w-14 h-14 bg-primary rounded-full flex justify-center"
-              initial={{ rotateY: 90 }}
-              animate={{ rotateY: 0 }}
-              exit={{ rotateY: 90 }}
-              transition={{ duration: 0.3 }}
-              key="smile"
-              onClick ={onChange}
-            >
-                <Image className="object-contain" src={"/happyGab.png"} alt="smile" width={40} height={40}/>
-            </motion.div>
-          ) : (
-            <motion.div
-              className="w-14 h-14 bg-zinc-200 rounded-full flex justify-center"
-              initial={{ rotateY: -90 }}
-              animate={{ rotateY: 0 }}
-              exit={{ rotateY: -90 }}
-              transition={{ duration: 0.5 }}
-              key="sad"              
-              onClick ={onChange}
-            >
-                <Image className="object-contain" src={"/almostSadGab.png"} alt="sad" width={45} height={45}/>
-            </motion.div>
+  return (
+    <>
+      <div className="relative flex flex-row items-center justify-center w-20 h-16 select-none touch-pan-x">
+        <motion.div
+          animate={
+            checked
+              ? { backgroundColor: "hsl(var(--primary))" }
+              : { backgroundColor: colors.zinc }
+          }
+          onClick={onChange}
+          className={cn(
+            "relative flex flex-row items-center w-full h-3 rounded-full",
+            checked ? "justify-end" : "justify-start",
           )}
-        </AnimatePresence>
-    )
-}
+        >
+          {checked ? (
+            <motion.img
+              layout
+              transition={{
+                type: "spring",
+                stiffness: 700,
+                damping: 30,
+              }}
+              className=" absolute -end-4 w-14 h-14 object-contain"
+              src={"/happyGab.png"}
+              alt="smile"
+            />
+          ) : (
+            <motion.img
+              layout
+              transition={{
+                type: "spring",
+                stiffness: 700,
+                damping: 30,
+              }}
+              className={
+                "absolute -start-4 w-14 h-14 object-contain grayscale "
+              }
+              src={"/almostSadGab.png"}
+              alt="sad"
+            />
+          )}
+        </motion.div>
+      </div>
+    </>
+  );
+};
 
 export default AnimatedCheckbox;

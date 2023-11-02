@@ -11,7 +11,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   return (
     <div className="z-10 fixed w-full items-center">
-      <div className="flex h-18 justify-between items-center left-0 top-0 border-b border-gray-300 bg-gradient-to-b from-zinc-200 px-4 pb-4 pt-4 backdrop-blur-xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:p-4 lg:dark:bg-zinc-800/30">
+      <div className="flex h-18 justify-between items-center left-0 top-0 border-b border-gray-300 px-4 pb-4 pt-4 backdrop-blur-xl lg:p-4">
         <div className="flex flex-row gap-1 items-center">
           <Sheet open={open} onOpenChange={(open: boolean) => setOpen(open)}>
             <SheetTrigger asChild>
@@ -37,7 +37,7 @@ export default function Header() {
         </div>
         <SwitchTheme />
       </div>
-      <div className="fixed bottom-0 left-0 flex h-24 p-4 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black">
+      <div className="fixed bottom-0 left-0 flex h-16 p-4 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black">
         <div>
           By <span className="font-bold">Antonio D.</span>
         </div>

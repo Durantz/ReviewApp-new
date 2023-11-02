@@ -1,7 +1,6 @@
 "use client";
 
 import * as z from "zod";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,8 @@ import StarRating from "@/components/StarRating";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+
+import { useToast } from "@/components/ui/use-toast";
 import AnimatedCheckbox from "@/components/AnimatedCheckbox";
 
 const formSchema = z.object({
@@ -28,12 +28,13 @@ const formSchema = z.object({
   address: z.string().min(10, "Inserire l'indirizzo"),
   productQuality: z.number(),
   location: z.number(),
+  plates: z.number(),
   rating: z.number(),
   approved: z.boolean().optional(),
 });
 
 export default function AddReview() {
-  const [sad, setSad] = useState(false);
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
@@ -42,6 +43,7 @@ export default function AddReview() {
       address: "",
       productQuality: 0,
       location: 0,
+      plates: 0,
       rating: 0,
       approved: false,
     },
@@ -50,12 +52,15 @@ export default function AddReview() {
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
     form.reset({});
+    toast({
+      title: "Salvataggio eseguito",
+      description: "La recensione è stata salvata correttamente",
+      position: "bottom",
+    });
   };
 
   return (
     <div className="grid grid-flow-row gap-1 w-auto">
-      <AnimatedCheckbox checked={sad} onCheckedChange={() => setSad(!sad)} />
-      
       <Form {...form}>
         <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
@@ -102,13 +107,35 @@ export default function AddReview() {
               </FormItem>
             )}
           />
-          <div className="flex flex-row gap-6 justify-between">
+          <div className="grid grid-cols-2  gap-1 justify-between">
             <FormField
               control={form.control}
               name="productQuality"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  <FormLabel>Qualità Prodotti</FormLabel>
+                  <FormLabel>Prodotti</FormLabel>
+                  <FormControl>
+                    <StarRating
+                      rating={field.value}
+                      isError={Boolean(form.getFieldState(field.name).error)}
+                      onChange={(value: number) => {
+                        form.setValue(field.name, value, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="plates"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Piatti</FormLabel>
                   <FormControl>
                     <StarRating
                       rating={field.value}
@@ -176,15 +203,19 @@ export default function AddReview() {
             control={form.control}
             name="approved"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-center space-x-3 space-y-0">
+              <FormItem className="space-y-1">
+                <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
                 <FormControl>
-                  <Checkbox
-                    className="h-5 w-5 active:animate-jump"
+                  <AnimatedCheckbox
                     checked={field.value}
-                    onCheckedChange={field.onChange}
+                    onCheckedChange={() =>
+                      form.setValue(field.name, !field.value, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      })
+                    }
                   />
                 </FormControl>
-                <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
                 <FormMessage className="text-xs" />
               </FormItem>
             )}
