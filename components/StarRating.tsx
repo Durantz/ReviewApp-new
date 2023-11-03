@@ -53,13 +53,13 @@ const StarRating: React.FC<StarRating> = ({
       <AnimatePresence mode="wait">
         {!disabled && rating > 0 ? (
           <motion.div
+            key="remove"
             variants={animation}
             initial="initial"
             animate="animate"
             exit="exit"
           >
             <Button
-              key="remove"
               type="button"
               size="icon"
               variant="link"
@@ -76,7 +76,7 @@ const StarRating: React.FC<StarRating> = ({
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <motion.div transition={{ duration: 0.5 }}>
+      <motion.div layout transition={{ duration: 0.5 }}>
         {Array.from({ length: 5 }, (_, index) => {
           return (
             <Button

@@ -18,7 +18,7 @@ const GeoapifyAutocomplete: React.FC<{}> = () => {
     <>
       <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_TOKEN}>
         <GeoapifyGeocoderAutocomplete
-          addDetails
+          placeholder="Cerca una località"
           limit={2}
           debounceDelay={250}
           lang="it"
