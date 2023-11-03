@@ -3,8 +3,16 @@
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { colors } from "tailwindcss/defaultTheme";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig, {
+  type Colors,
+  type DefaultColors,
+} from "../tailwind.config";
 
+const tw = resolveConfig(tailwindConfig);
+const { theme } = tw as unknown as {
+  theme: (typeof tw)["theme"] & { colors: DefaultColors & Colors };
+};
 interface AnimatedCheckbox {
   checked: boolean;
   onCheckedChange: () => void;
@@ -17,15 +25,15 @@ const AnimatedCheckbox: React.FC<AnimatedCheckbox> = ({
   const onChange = () => {
     onCheckedChange();
   };
-
+  const config = resolveConfig(tailwindConfig);
   return (
     <>
       <div className="relative flex flex-row items-center justify-center w-20 h-16 select-none touch-pan-x">
         <motion.div
           animate={
             checked
-              ? { backgroundColor: "hsl(var(--primary))" }
-              : { backgroundColor: colors.zinc }
+              ? { backgroundColor: theme?.colors?.primary["DEFAULT"] }
+              : { backgroundColor: "hsl(var(--muted))" }
           }
           onClick={onChange}
           className={cn(

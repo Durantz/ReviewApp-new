@@ -55,14 +55,13 @@ export default function AddReview() {
     toast({
       title: "Salvataggio eseguito",
       description: "La recensione è stata salvata correttamente",
-      position: "bottom",
     });
   };
 
   return (
     <div className="grid grid-flow-row gap-1 w-auto">
       <Form {...form}>
-        <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
             name="restaurant"

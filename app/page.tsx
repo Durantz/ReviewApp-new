@@ -18,6 +18,7 @@ const list: ReviewList = [
     latitude: 45.4459139,
     review: "",
     address: "Via Lorenteggio, 240, 20147 Milano MI",
+    approved: false,
   },
   {
     id: 2,
@@ -30,6 +31,7 @@ const list: ReviewList = [
     latitude: 45.448617,
     review: "",
     address: "Via Lorenteggio, 177, 20147 Milano MI",
+    approved: true,
   },
   {
     id: 3,
@@ -42,6 +44,7 @@ const list: ReviewList = [
     latitude: 45.4551841,
     review: "",
     address: "Via Angelo Inganni, 83, 20147 Milano MI",
+    approved: true,
   },
 ];
 

@@ -10,16 +10,38 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import markerUrl from "@/public/map_marker_2.png";
 import StarRating from "@/components/StarRating";
-import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup, stagger } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { Review } from "@/types";
+
+const additionalData = {
+  hidden: {
+    y: -5,
+    opacity: 0,
+    transition: {
+      staggerDirection: -1,
+      when: "afterChildren",
+      staggerChildren: 0.2,
+    },
+  },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      when: "beforeChildren",
+      staggerDirection: 1,
+    },
+  },
+};
 
 interface ReviewCard {
   data: Review;
@@ -27,7 +49,7 @@ interface ReviewCard {
 
 const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
   const center = [data.latitude, data.longitude];
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(false);
   const markerIcon = new L.Icon({
     iconUrl: markerUrl.src,
     iconSize: [markerUrl.width * 0.5, markerUrl.height * 0.5],
@@ -35,9 +57,18 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
 
   return (
     <>
-      <motion.div layout layoutId={data.id} className="w-full md:w-1/2">
-        <Card>
-          <CardHeader>
+      <motion.div layout layoutId={"" + data.id} className="w-full md:w-1/2">
+        <Card className="group">
+          <CardHeader className="relative">
+            {data.approved ? (
+              <motion.div layout="position" className="absolute top-2 right-3">
+                <motion.img
+                  src="/happyGab.png"
+                  alt="approved by Spaccavacciuolo"
+                  className=" w-11 h-11 p-1 bg-primary rounded-full object-contain group-hover:animate-wiggle-more group-hover:animate-infinite"
+                />
+              </motion.div>
+            ) : null}
             <motion.div layout="position">
               <CardTitle>{data.restaurant}</CardTitle>
               <CardDescription className="flex flex-col gap-1">
@@ -81,50 +112,62 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     initial={{ width: 0 }}
                     animate={{
                       width: "auto",
-                      transition: { delay: 0.3 },
+                      transition: { delay: 0.3, staggerChildren: 0.2 },
                     }}
-                    exit={{ width: 0, transition: { delay: 0.6 } }}
+                    exit={{ width: 0 }}
                   >
                     <Separator />
                   </motion.div>
                   <motion.div
+                    layout
                     key="additionaldata"
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: 0.6 } }}
-                    exit={{ opacity: 0, y: -5, transition: { delay: 0.3 } }}
+                    variants={additionalData}
+                    initial={"hidden"}
+                    animate={"visible"}
+                    exit={"hidden"}
                     className="w-full h-auto grid grid-cols-2 gap-2 mt-2"
                   >
                     <motion.div
-                      layout="position"
+                      variants={additionalData}
                       className="flex flex-col gap-2"
                     >
                       <Label>Qualità</Label>
                       <StarRating
                         rating={data.product}
-                        onClick={() => {}}
+                        onChange={() => {}}
                         disabled
                         className="w-4 h-4"
                       />
                     </motion.div>
-                    <motion.div className="flex flex-col gap-2">
+                    <motion.div
+                      variants={additionalData}
+                      className="flex flex-col gap-2"
+                    >
                       <Label>Piatti</Label>
                       <StarRating
                         rating={data.plates}
-                        onClick={() => {}}
+                        onChange={() => {}}
                         disabled
                         className="w-4 h-4"
                       />
                     </motion.div>
-                    <motion.div className="flex flex-col gap-2">
+                    <motion.div
+                      variants={additionalData}
+                      className="flex flex-col gap-2"
+                    >
                       <Label>Location</Label>
                       <StarRating
                         rating={data.location}
-                        onClick={() => {}}
+                        onChange={() => {}}
                         disabled
                         className="w-4 h-4"
                       />
                     </motion.div>
-                    <motion.div className="flex flex-col gap-2 col-span-2">
+                    <motion.div
+                      layout
+                      variants={additionalData}
+                      className="flex flex-col gap-2 col-span-2"
+                    >
                       <Label>Recensione</Label>
                       <motion.p className="text-xs">
                         Questa è una recensione di prova per testare se funziona

@@ -9,4 +9,5 @@ export interface Review {
   longitude: number;
   latitude: number;
   address: string;
+  approved: boolean;
 }
