@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .geoapify-autocomplete-input {
-  @apply flex h-10 w-full dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-2;
+  @apply flex h-10 px-3 py-2 w-full dark:bg-card bg-zinc-200 border rounded-md text-black dark:text-white text-sm placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-0 focus-visible:ring-0 focus-visible:border-2;
 }
 .geoapify-close-button {
   @apply hidden;
