@@ -7,10 +7,11 @@ import { useState } from "react";
 const GeoapifyAutocomplete: React.FC<{}> = () => {
   const [coord, setCoord] = useState([0, 0]);
 
-  const onSelect = (value: GeoJSON.Feature) => {
-    const props: GeoJSON.GeoJsonProperties = value.properties;
+  const onSelect = (value: any) => {
+    const props = value.properties as GeoJSON.GeoJsonProperties;
     setCoord([props?.lat, props?.lon]);
     console.log(value);
+    return null;
   };
 
   return (
