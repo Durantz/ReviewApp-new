@@ -32,8 +32,8 @@ const AnimatedCheckbox: React.FC<AnimatedCheckbox> = ({
         <motion.div
           animate={
             checked
-              ? { backgroundColor: theme?.colors?.primary["DEFAULT"] }
-              : { backgroundColor: "hsl(var(--muted))" }
+              ? { backgroundColor: theme?.colors?.green["600"] }
+              : { backgroundColor: theme.colors.zinc["200"] }
           }
           onClick={onChange}
           className={cn(

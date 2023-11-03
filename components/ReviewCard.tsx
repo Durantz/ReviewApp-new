@@ -58,17 +58,17 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
   return (
     <>
       <motion.div layout layoutId={"" + data.id} className="w-full md:w-1/2">
-        <Card className="group">
-          <CardHeader className="relative">
-            {data.approved ? (
-              <motion.div layout="position" className="absolute top-2 right-3">
-                <motion.img
-                  src="/happyGab.png"
-                  alt="approved by Spaccavacciuolo"
-                  className=" w-11 h-11 p-1 bg-primary rounded-full object-contain group-hover:animate-wiggle-more group-hover:animate-infinite"
-                />
-              </motion.div>
-            ) : null}
+        <Card className="relative group">
+          {data.approved ? (
+            <motion.div layout="position" className="absolute top-2 right-3">
+              <motion.img
+                src="/happyGab.png"
+                alt="approved by Spaccavacciuolo"
+                className=" w-11 h-11 p-1 bg-primary rounded-full object-contain group-hover:animate-wiggle-more group-hover:animate-infinite"
+              />
+            </motion.div>
+          ) : null}
+          <CardHeader>
             <motion.div layout="position">
               <CardTitle>{data.restaurant}</CardTitle>
               <CardDescription className="flex flex-col gap-1">
