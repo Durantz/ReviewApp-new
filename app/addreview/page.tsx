@@ -17,13 +17,9 @@ import {
 import { Button } from "@/components/ui/button";
 import StarRating from "@/components/StarRating";
 import { Separator } from "@/components/ui/separator";
-import {
-  GeoapifyContext,
-  GeoapifyGeocoderAutocomplete,
-} from "@geoapify/react-geocoder-autocomplete";
 import { useToast } from "@/components/ui/use-toast";
 import AnimatedCheckbox from "@/components/AnimatedCheckbox";
-import { env } from "process";
+import GeoapifyAutocomplete from "@/components/GeoapifyAutocomplete";
 
 const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
@@ -50,7 +46,6 @@ export default function AddReview() {
       approved: false,
     },
   });
-
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
     form.reset({});
@@ -59,13 +54,10 @@ export default function AddReview() {
       description: "La recensione è stata salvata correttamente",
     });
   };
-
   return (
     <div className="grid grid-flow-row gap-1 w-auto">
-      <GeoapifyContext apiKey={env.GEOAPIFY_TOKEN}>
-        <GeoapifyGeocoderAutocomplete addDetails limit={2} lang="it" />
-      </GeoapifyContext>
       <Form {...form}>
+        <GeoapifyAutocomplete />
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             control={form.control}
