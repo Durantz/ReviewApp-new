@@ -70,7 +70,7 @@ export default function AddReview() {
                     placeholder="Da Totò Trattoria Rustica"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-200 border text-black dark:text-white dark:placeholder:text-zinc-200/20 placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       form.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
@@ -92,7 +92,7 @@ export default function AddReview() {
                     placeholder="Via degli Arbusti 10, Milano"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-200/20 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       form.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
