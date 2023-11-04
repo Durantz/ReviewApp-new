@@ -1,3 +1,5 @@
+"use client";
+
 import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
@@ -8,10 +10,9 @@ const GeoapifyAutocomplete: React.FC<{}> = () => {
   const [coord, setCoord] = useState([0, 0]);
 
   const onSelect = (value: any) => {
-    const props = value.properties as GeoJSON.GeoJsonProperties;
-    setCoord([props?.lat, props?.lon]);
+    // const props = value.properties as GeoJSON.GeoJsonProperties;
+    // setCoord([props?.lat, props?.lon]);
     console.log(value);
-    return null;
   };
 
   return (
