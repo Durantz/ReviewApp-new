@@ -1,8 +1,10 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils";
 import Header from "../components/Header";
 import ToasterWrapper from "@/components/ToasterWrapper";
 import ThemeProvider from "@/components/ThemeProvider";
+import lightBackground from "@/public/Background_Light.png";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,10 +32,13 @@ export default function RootLayout({
           content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
         />
       </head>
-      <body className={inter.className}>
+      <body
+        className={cn(inter.className, " bg-cover bg-fixed")}
+        // style={{ backgroundImage: `url(${lightBackground.src})` }}
+      >
         <ThemeProvider defaultTheme="light" attribute="class">
           <Header />
-          <div className="pt-20 pb-24 px-4 h-full">{children}</div>
+          <div className="pt-16 pb-24 px-4 h-full">{children}</div>
           <ToasterWrapper />
         </ThemeProvider>
       </body>

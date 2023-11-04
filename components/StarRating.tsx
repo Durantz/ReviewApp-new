@@ -49,7 +49,7 @@ const StarRating: React.FC<StarRating> = ({
     onChange(0);
   };
   return (
-    <motion.div layout layoutRoot className="flex flex-row gap-0.5 ">
+    <motion.div layout className="flex flex-row gap-0.5 ">
       <LayoutGroup>
         <AnimatePresence mode="wait">
           {!disabled && rating > 0 ? (

@@ -20,9 +20,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { Review } from "@/types";
+import { Edit } from "lucide-react";
 
 const additionalData = {
   hidden: {
+    heigth: 0,
     y: -5,
     opacity: 0,
     transition: {
@@ -32,6 +34,7 @@ const additionalData = {
     },
   },
   visible: {
+    height: "auto",
     y: 0,
     opacity: 1,
     transition: {
@@ -57,7 +60,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
   return (
     <>
       <motion.div layout layoutId={"" + data.id} className="w-full md:w-1/2">
-        <Card className="relative group">
+        <Card className="relative group backdrop-blur-xl">
           {data.approved ? (
             <motion.div layout="position" className="absolute top-2 right-3">
               <motion.img
@@ -69,7 +72,12 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
           ) : null}
           <CardHeader>
             <motion.div layout="position">
-              <CardTitle>{data.restaurant}</CardTitle>
+              <CardTitle>
+                <span className="flex flex-row items-center gap-2">
+                  {data.restaurant}
+                  <Edit className="w-4 h-4 cursor-pointer" />
+                </span>
+              </CardTitle>
               <CardDescription className="flex flex-col gap-1">
                 <div>{data.address}</div>
                 <StarRating
@@ -154,6 +162,18 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                       variants={additionalData}
                       className="flex flex-col gap-2"
                     >
+                      <Label>Ospitalità</Label>
+                      <StarRating
+                        rating={data.ospitality}
+                        onChange={() => {}}
+                        disabled
+                        className="w-4 h-4"
+                      />
+                    </motion.div>
+                    <motion.div
+                      variants={additionalData}
+                      className="flex flex-col gap-2"
+                    >
                       <Label>Location</Label>
                       <StarRating
                         rating={data.location}
@@ -186,11 +206,17 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
           >
             <motion.div layout>
               {active ? (
-                <Button onClick={() => setActive(false)} variant="ghost">
+                <Button
+                  className="h-8"
+                  onClick={() => setActive(false)}
+                  variant="ghost"
+                >
                   Chiudi
                 </Button>
               ) : (
-                <Button onClick={() => setActive(true)}>Espandi</Button>
+                <Button className="h-8" onClick={() => setActive(true)}>
+                  Espandi
+                </Button>
               )}
             </motion.div>
           </CardFooter>

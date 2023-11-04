@@ -4,6 +4,7 @@ export interface Review {
   rating: number;
   product: number;
   plates: number;
+  ospitality: number;
   location: number;
   review: string;
   longitude: number;

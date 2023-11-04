@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import { cn } from "@/lib/utils";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
@@ -32,6 +33,7 @@ const formSchema = z.object({
   productQuality: z.number(),
   location: z.number(),
   plates: z.number(),
+  ospitality: z.number(),
   rating: z.number(),
   approved: z.boolean().optional(),
   reviewNotes: z.string().max(400),
@@ -79,7 +81,8 @@ export default function AddReview() {
       lon: 0,
     },
   });
-  const lat = useWatch({ zodForm, name: "lat" });
+  const latValue = zodForm.watch("lat", 0);
+  const lonValue = zodForm.watch("lon", 0);
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
     zodForm.reset({});
@@ -156,7 +159,7 @@ export default function AddReview() {
                     placeholder="Da Totò Trattoria Rustica"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white dark:placeholder:text-zinc-200/20 placeholder:text-zinc-400 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-100 border text-black dark:text-white dark:placeholder:text-zinc-200/20 placeholder:text-zinc-300 border-primary focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       zodForm.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
@@ -178,25 +181,31 @@ export default function AddReview() {
                     placeholder="Via degli Arbusti 10, Milano"
                     {...field}
                     className={cn(
-                      "dark:bg-card bg-zinc-200 border text-black dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-200/20 border-zinc-400 focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
+                      "dark:bg-card bg-zinc-100 border text-black dark:text-white dark:placeholder:text-zinc-200/20 placeholder:text-zinc-300 border-primary focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2",
                       zodForm.getFieldState(field.name).error
                         ? "border-destructive"
                         : "",
                     )}
                   />
                 </FormControl>
-                {lat && (
+                {latValue > 0 && (
                   <div className="flex flex-row justify-between">
                     <FormDescription className="text-xs">
-                      {"Lat: " + lat + ", Lon: " + zodForm.getValues("lon")}
+                      {"Lat: " + latValue + ", Lon: " + lonValue}
                     </FormDescription>
                     <Button
                       type="button"
                       variant={"destructive"}
                       className="h-4 text-xs w-auto"
                       onClick={() => {
-                        zodForm.resetField("lat");
-                        zodForm.resetField("lon");
+                        zodForm.setValue("lat", 0, {
+                          shouldDirty: false,
+                          shouldTouch: false,
+                        });
+                        zodForm.setValue("lon", 0, {
+                          shouldDirty: false,
+                          shouldTouch: false,
+                        });
                         zodForm.resetField("address");
                       }}
                     >
@@ -255,6 +264,28 @@ export default function AddReview() {
             />
             <FormField
               control={zodForm.control}
+              name="ospitality"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Ospitalità</FormLabel>
+                  <FormControl>
+                    <StarRating
+                      rating={field.value}
+                      isError={Boolean(zodForm.getFieldState(field.name).error)}
+                      onChange={(value: number) => {
+                        zodForm.setValue(field.name, value, {
+                          shouldValidate: true,
+                          shouldDirty: true,
+                        });
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={zodForm.control}
               name="location"
               render={({ field }) => (
                 <FormItem className="space-y-1">
@@ -276,6 +307,22 @@ export default function AddReview() {
               )}
             />
           </div>
+          <FormField
+            control={zodForm.control}
+            name="reviewNotes"
+            render={({ field }) => (
+              <FormItem className="space-y-1">
+                <FormLabel>Note</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    className="dark:bg-card bg-zinc-100 border text-black dark:text-white dark:placeholder:text-zinc-200/20 placeholder:text-zinc-300 border-primary focus-visible:ring-offset-1 focus-visible:ring-0 focus-visible:border-2"
+                    inputMode="text"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
           <Separator className="dark:bg-zinc-400" />
           <FormField
             control={zodForm.control}

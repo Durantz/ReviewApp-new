@@ -11,7 +11,7 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   return (
     <div className="z-10 fixed w-full items-center">
-      <div className="flex h-18 justify-between items-center left-0 top-0 border-b border-gray-300 px-4 pb-4 pt-4 backdrop-blur-xl lg:p-4">
+      <div className="flex h-14 justify-between items-center left-0 top-0 border-b border-gray-300 px-4 pb-4 pt-4 backdrop-blur-xl lg:p-4">
         <div className="flex flex-row gap-1 items-center">
           {/* <Sheet open={open} onOpenChange={(open: boolean) => setOpen(open)}>
             <SheetTrigger asChild>
@@ -37,7 +37,7 @@ export default function Header() {
         </div>
         <div className="flex flex-row">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/addreview" passHref>
+            <Link href="/newreview" passHref>
               <Plus />
             </Link>
           </Button>
