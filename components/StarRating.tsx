@@ -1,3 +1,5 @@
+"use client";
+
 import { Slash, Star } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";

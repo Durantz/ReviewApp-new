@@ -189,8 +189,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     >
                       <Label>Recensione</Label>
                       <motion.p className="text-xs">
-                        Questa è una recensione di prova per testare se funziona
-                        tutto come si deve.
+                        {data.reviewNotes}
                       </motion.p>
                     </motion.div>
                   </motion.div>

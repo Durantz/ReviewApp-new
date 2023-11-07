@@ -1,23 +1,47 @@
+"use client";
+
 import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
 } from "@geoapify/react-geocoder-autocomplete";
 import { useState } from "react";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+import { ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const autocompleteAnimation = {
+  initial: {
+    height: 0,
+    y: -5,
+    opacity: 0,
+  },
+  animate: {
+    height: "auto",
+    y: 0,
+    opacity: 1,
+    transition: { opacity: { delay: 0.2 } },
+  },
+  exit: {
+    height: 0,
+    y: -5,
+    opacity: 0,
+    transition: { height: { delay: 0.2 } },
+  },
+};
 
 const GeoapifyAutocomplete: React.FC<{
-  passInfo: (
+  onPlaceSelect: (
     lat: number,
     lon: number,
     restaurant: string,
     address: string,
   ) => void;
-}> = ({ passInfo }) => {
-  const [coord, setCoord] = useState([0, 0]);
-
+}> = ({ onPlaceSelect }) => {
+  const [open, setOpen] = useState(false);
   const onSelect = (value: any) => {
     const props = value.properties as GeoJSON.GeoJsonProperties;
-    setCoord([props?.lat, props?.lon]);
-    passInfo(
+    onPlaceSelect(
       props?.lat,
       props?.lon,
       props?.address_line1,
@@ -26,15 +50,42 @@ const GeoapifyAutocomplete: React.FC<{
   };
 
   return (
-    <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_TOKEN}>
-      <GeoapifyGeocoderAutocomplete
-        placeholder="Cerca una località"
-        limit={2}
-        debounceDelay={250}
-        lang="it"
-        placeSelect={onSelect}
-      />
-    </GeoapifyContext>
+    <div className="grid grid-flow-row gap-1">
+      <div className="flex flex-row items-center gap-1">
+        <Label>Ricerca locali</Label>
+        <Button
+          size={"icon"}
+          variant={"ghost"}
+          className="p-1"
+          onClick={() => setOpen(!open)}
+        >
+          <motion.span animate={open ? { rotate: 180 } : { rotate: 0 }}>
+            <ChevronDown className="w-5 h-5" />
+          </motion.span>
+        </Button>
+      </div>
+      <AnimatePresence mode="wait">
+        {open && (
+          <motion.div
+            key="search"
+            variants={autocompleteAnimation}
+            animate="animate"
+            initial="initial"
+            exit="exit"
+          >
+            <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_TOKEN}>
+              <GeoapifyGeocoderAutocomplete
+                placeholder="Cerca una località"
+                limit={2}
+                debounceDelay={250}
+                lang="it"
+                placeSelect={onSelect}
+              />
+            </GeoapifyContext>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
