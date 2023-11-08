@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import ToasterWrapper from "@/components/ToasterWrapper";
 import ThemeProvider from "@/components/ThemeProvider";
 import RecoilRootProvider from "@/components/RecoilRootProvider";
+import SessionProvider from "@/components/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         />
       </head>
       <body className={cn(inter.className, " bg-cover bg-fixed")}>
+        <SessionProvider>
         <RecoilRootProvider>
           <ThemeProvider defaultTheme="light" attribute="class">
             <Header />
@@ -40,6 +42,7 @@ export default function RootLayout({
             <ToasterWrapper />
           </ThemeProvider>
         </RecoilRootProvider>
+        </SessionProvider>
       </body>
     </html>
   );
