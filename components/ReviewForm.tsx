@@ -22,9 +22,10 @@ import { schemaType } from "@/types";
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
   onSubmit: (value: schemaType) => void;
+  onBack: () => void;
 }
 
-const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit }) => {
+const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack }) => {
   const latValue = form.watch("latitude", 0);
   const lonValue = form.watch("longitude", 0);
 
@@ -81,11 +82,11 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit }) => {
                     variant={"destructive"}
                     className="h-4 text-xs w-auto"
                     onClick={() => {
-                      form.setValue("lat", 0, {
+                      form.setValue("latitude", 0, {
                         shouldDirty: false,
                         shouldTouch: false,
                       });
-                      form.setValue("lon", 0, {
+                      form.setValue("longitude", 0, {
                         shouldDirty: false,
                         shouldTouch: false,
                       });
@@ -238,7 +239,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit }) => {
               <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
               <FormControl>
                 <AnimatedCheckbox
-                  checked={Boolean(field.value)}
+                  checked={field.value}
                   onCheckedChange={() =>
                     form.setValue(field.name, !field.value, {
                       shouldValidate: true,
@@ -251,7 +252,17 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit }) => {
             </FormItem>
           )}
         />
-        <Button type="submit">Sottometti</Button>
+        <Button className="w-full" type="submit">
+          Aggiungi
+        </Button>
+        <Button
+          type="button"
+          variant={"outline"}
+          className="w-full"
+          onClick={onBack}
+        >
+          Indietro
+        </Button>
       </form>
     </Form>
   );

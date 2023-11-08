@@ -77,6 +77,7 @@ export default function AddReview() {
       <ReviewForm
         form={zodForm}
         onSubmit={(values: schemaType) => onSubmit(values)}
+        onBack={() => router.back()}
       />
     </div>
   );

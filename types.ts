@@ -8,7 +8,7 @@ export const formSchema = z.object({
   plates: z.number(),
   ospitality: z.number(),
   rating: z.number(),
-  approved: z.boolean().optional(),
+  approved: z.boolean(),
   reviewNotes: z.string().max(400),
   latitude: z.number(),
   longitude: z.number(),
@@ -24,7 +24,7 @@ export interface Review {
   plates: number;
   ospitality: number;
   location: number;
-  review: string;
+  reviewNotes: string;
   longitude: number;
   latitude: number;
   address: string;

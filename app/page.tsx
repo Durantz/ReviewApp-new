@@ -1,14 +1,8 @@
-import ReviewCard from "@/components/ReviewCard";
-import { LayoutGroup } from "framer-motion";
-import { Review } from "@/types";
 import ReviewCardList from "@/components/ReviewCardList";
-
-
-interface ReviewList extends Array<Review> {}
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-2 justify-center items-center w-auto">
+    <div className="snap-y snap-mandatory grid grid-cols-1 md:grid-cols-3 gap-2 justify-items-center md:items-start items-center w-auto">
       <ReviewCardList />
     </div>
   );

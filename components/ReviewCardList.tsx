@@ -5,7 +5,7 @@ import ReviewCard from "@/components/ReviewCard";
 import { useRecoilValue } from "recoil";
 import { reviews } from "@/states";
 
-const ReviewCardList: React.FC<> = () => {
+const ReviewCardList: React.FC = () => {
   const reviewList = useRecoilValue(reviews);
 
   return (

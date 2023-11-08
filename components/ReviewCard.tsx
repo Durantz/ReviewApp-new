@@ -59,7 +59,11 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
 
   return (
     <>
-      <motion.div layout layoutId={"" + data.id} className="w-full md:w-1/2">
+      <motion.div
+        layout
+        layoutId={"" + data.id}
+        className="w-full md:w-[450px] snap-center"
+      >
         <Card className="relative group backdrop-blur-xl">
           {data.approved ? (
             <motion.div layout="position" className="absolute top-2 right-3">
@@ -91,25 +95,31 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
           </CardHeader>
           <CardContent className="h-auto">
             <motion.div layout="position" className="h-40">
-              <MapContainer
-                center={center}
-                zoom={17}
-                className="z-0 h-full rounded-md"
-                dragging={false}
-                scrollWheelZoom={false}
-                doubleClickZoom={false}
-                touchZoom={false}
-                zoomControl={false}
-                attributionControl={false}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={center} icon={markerIcon}>
-                  <Popup>{data.address}</Popup>
-                </Marker>
-              </MapContainer>
+              {data.latitude == 0 && data.longitude == 0 ? (
+                <div className=" flex flex-row items-center justify-center h-full rounded-md bg-slate-100 dark:bg-zinc-700">
+                  <p className="text-center text-sm">Nessuna posizione</p>
+                </div>
+              ) : (
+                <MapContainer
+                  center={center}
+                  zoom={17}
+                  className="z-0 h-full rounded-md"
+                  dragging={false}
+                  scrollWheelZoom={false}
+                  doubleClickZoom={false}
+                  touchZoom={false}
+                  zoomControl={false}
+                  attributionControl={false}
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={center} icon={markerIcon}>
+                    <Popup>{data.address}</Popup>
+                  </Marker>
+                </MapContainer>
+              )}
             </motion.div>
             <AnimatePresence mode="wait">
               {active && (
@@ -140,7 +150,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     >
                       <Label>Qualità</Label>
                       <StarRating
-                        rating={data.product}
+                        rating={data.productQuality}
                         onChange={() => {}}
                         disabled
                         className="w-4 h-4"

@@ -4,7 +4,7 @@ import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
 } from "@geoapify/react-geocoder-autocomplete";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
@@ -39,6 +39,7 @@ const GeoapifyAutocomplete: React.FC<{
   ) => void;
 }> = ({ onPlaceSelect }) => {
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ lon: 0, lat: 0 });
   const onSelect = (value: any) => {
     const props = value.properties as GeoJSON.GeoJsonProperties;
     onPlaceSelect(
@@ -48,6 +49,15 @@ const GeoapifyAutocomplete: React.FC<{
       props?.address_line2,
     );
   };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setPosition({
+        lon: position.coords.longitude,
+        lat: position.coords.latitude,
+      });
+    });
+  });
 
   return (
     <div className="grid grid-flow-row gap-1">
@@ -80,6 +90,7 @@ const GeoapifyAutocomplete: React.FC<{
                 debounceDelay={250}
                 lang="it"
                 placeSelect={onSelect}
+                biasByProximity={position}
               />
             </GeoapifyContext>
           </motion.div>
