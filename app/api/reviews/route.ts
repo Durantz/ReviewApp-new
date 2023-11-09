@@ -1,7 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
 import { ReviewModel } from "@/types";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+export default async function GET(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
   try {
     const reviews = await ReviewModel.find({});
