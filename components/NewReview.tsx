@@ -8,17 +8,14 @@ import GeoapifyAutocomplete from "@/components/GeoapifyAutocomplete";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import ReviewForm from "@/components/ReviewForm";
-import { schemaType, formSchema } from "@/types";
-import { useRecoilState } from "recoil";
-import { reviews } from "@/states";
-import useSWR from "swr";
+import { schemaType, formSchema, Review } from "@/types";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-export default function AddReview() {
-  // const [reviewList, setReview] = useRecoilState(reviews);
+export default function NewReview({
+  putData,
+}: {
+  putData: (value: schemaType) => void;
+}) {
   const router = useRouter();
-  const SWR = useSWR();
   const { toast } = useToast();
   const zodForm = useForm<schemaType>({
     resolver: zodResolver(formSchema),
@@ -40,9 +37,9 @@ export default function AddReview() {
 
   const onSubmit = async (values: schemaType) => {
     // console.log({ ...values, id: reviewList.length + 1 });
-    const res = await putData(values);
-    await res.json();
+    putData(values);
     // setReview([...reviewList, { ...values, id: reviewList.length + 1 }]);
+    zodForm.reset({});
     toast({
       title: "Salvataggio eseguito",
       description: "La recensione è stata salvata correttamente",
@@ -85,13 +82,4 @@ export default function AddReview() {
       />
     </div>
   );
-}
-
-async function putData(review: schemaType) {
-  const res = await fetch("http://localhost:3000/api/reviews", {
-    method: "POST",
-    body: JSON.stringify(review),
-  });
-  await res.json();
-  console.log(res);
 }

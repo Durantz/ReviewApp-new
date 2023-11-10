@@ -61,7 +61,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
     <>
       <motion.div
         layout
-        layoutId={"" + data.id}
+        layoutId={"" + data._id}
         className="w-full md:w-[450px] snap-center"
       >
         <Card className="relative group backdrop-blur-xl">
@@ -150,7 +150,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     >
                       <Label>Qualità</Label>
                       <StarRating
-                        rating={data.productQuality}
+                        rating={data.quality}
                         onChange={() => {}}
                         disabled
                         className="w-4 h-4"
@@ -198,9 +198,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                       className="flex flex-col gap-2 col-span-2"
                     >
                       <Label>Recensione</Label>
-                      <motion.p className="text-xs">
-                        {data.reviewNotes}
-                      </motion.p>
+                      <motion.p className="text-xs">{data.notes}</motion.p>
                     </motion.div>
                   </motion.div>
                 </>
