@@ -4,13 +4,13 @@ import * as z from "zod";
 export const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
   address: z.string().min(10, "Inserire l'indirizzo"),
-  productQuality: z.number(),
+  quality: z.number(),
   location: z.number(),
   plates: z.number(),
   ospitality: z.number(),
   rating: z.number(),
   approved: z.boolean(),
-  reviewNotes: z.string().max(400),
+  notes: z.string().max(400),
   latitude: z.number(),
   longitude: z.number(),
 });

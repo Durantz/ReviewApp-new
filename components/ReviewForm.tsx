@@ -1,5 +1,3 @@
-"use client";
-
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "./ui/button";
 import {
@@ -104,7 +102,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack }) => {
         <div className="grid grid-cols-2  gap-1 justify-between">
           <FormField
             control={form.control}
-            name="productQuality"
+            name="quality"
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Prodotti</FormLabel>
@@ -193,7 +191,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack }) => {
         </div>
         <FormField
           control={form.control}
-          name="reviewNotes"
+          name="notes"
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Note</FormLabel>

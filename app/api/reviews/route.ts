@@ -20,12 +20,15 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const body = req.body;
+  const body = await req.json();
+  console.log(body);
+  console.log(JSON.stringify(body));
   try {
-    const data = await sendPost(
+    const data = await fetch(
       "https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/add",
       {
-        body: body,
+        method: "POST",
+        body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
           "API-Key": process.env.MONGODB_API_KEY!,
