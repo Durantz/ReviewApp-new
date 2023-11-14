@@ -15,12 +15,14 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import markerUrl from "@/public/map_marker_2.png";
 import StarRating from "@/components/StarRating";
-import { motion, AnimatePresence, LayoutGroup, stagger } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 import { Review } from "@/types";
 import { Edit } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { deleteReview } from "@/lib/functions";
 
 const additionalData = {
   hidden: {
@@ -52,10 +54,18 @@ interface ReviewCard {
 const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
   const center = [data.latitude, data.longitude];
   const [active, setActive] = useState(false);
+  const [openPopover, setOpenPopover] = useState(false);
   const markerIcon = new L.Icon({
     iconUrl: markerUrl.src,
     iconSize: [markerUrl.width * 0.5, markerUrl.height * 0.5],
   });
+
+  const deleteMe = async (id: string) => {
+    console.log(id);
+    const data = await deleteReview(id);
+    console.log(data);
+    setOpenPopover(false);
+  };
 
   return (
     <>
@@ -79,7 +89,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
               <CardTitle>
                 <span className="flex flex-row items-center gap-2">
                   {data.restaurant}
-                  <Edit className="w-4 h-4 cursor-pointer" />
+                  {/* <Edit className="w-4 h-4 cursor-pointer" /> */}
                 </span>
               </CardTitle>
               <CardDescription className="flex flex-col gap-1">
@@ -198,34 +208,97 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                       className="flex flex-col gap-2 col-span-2"
                     >
                       <Label>Recensione</Label>
-                      <motion.p className="text-xs">{data.notes}</motion.p>
+                      <motion.p className="break-words text-xs min-h-content">
+                        {data.notes}
+                      </motion.p>
+                    </motion.div>
+                    <motion.div
+                      className="flex flex-row gap-1 mt-2 col-span-2"
+                      initial={{ width: 0 }}
+                      animate={{
+                        width: "auto",
+                        transition: { delay: 0.3, staggerChildren: 0.2 },
+                      }}
+                      exit={{ width: 0 }}
+                    >
+                      <Separator />
+                    </motion.div>
+                    <motion.div
+                      layout
+                      variants={additionalData}
+                      className="flex flex-row justify-between col-span-2"
+                    >
+                      <Popover open={openPopover}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"destructive"}
+                            className="h-8"
+                            onClick={() => setOpenPopover(true)}
+                          >
+                            Elimina
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-60"
+                          side="left"
+                          onInteractOutside={() => setOpenPopover(false)}
+                        >
+                          <div className="w-full grid cols-1 gap-1 place-items-center">
+                            <p className="text-sm text-center">
+                              Vuoi eliminare la recensione?
+                            </p>
+                            <Button
+                              variant={"default"}
+                              className="h-6 text-xs w-1/2"
+                              onClick={() => deleteMe(data._id)}
+                            >
+                              Conferma
+                            </Button>
+                            {/* <Button
+                        variant={"ghost"}
+                        className="h-6 text-xs"
+                        type="reset"
+                        onClick={() => setOpenPopover(false)}
+                      >
+                        Annulla
+                      </Button> */}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <Button variants="secondary" className="h-8">
+                        Modifica
+                      </Button>
                     </motion.div>
                   </motion.div>
                 </>
               )}
             </AnimatePresence>
           </CardContent>
-          <CardFooter
-            className={cn(
-              active ? "justify-end" : "justify-start",
-              "w-full flex flex-row",
-            )}
-          >
-            <motion.div layout>
-              {active ? (
-                <Button
-                  className="h-8"
-                  onClick={() => setActive(false)}
-                  variant="ghost"
-                >
-                  Chiudi
-                </Button>
-              ) : (
-                <Button className="h-8" onClick={() => setActive(true)}>
-                  Espandi
-                </Button>
-              )}
-            </motion.div>
+          <CardFooter>
+            <div className="flex flex-row w-full justify-between gap-2">
+              <div
+                className={cn(
+                  active ? "justify-end" : "justify-start",
+                  "w-full flex flex-row",
+                )}
+              >
+                <motion.div layout>
+                  {active ? (
+                    <Button
+                      className="h-8"
+                      onClick={() => setActive(false)}
+                      variant="ghost"
+                    >
+                      Chiudi
+                    </Button>
+                  ) : (
+                    <Button className="h-8" onClick={() => setActive(true)}>
+                      Espandi
+                    </Button>
+                  )}
+                </motion.div>
+              </div>
+            </div>
           </CardFooter>
         </Card>
       </motion.div>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import SwitchTheme from "./SwitchTheme";
-import {useSession,signIn} from 'next-auth/react'
+import { useSession, signIn, signOut } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +14,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Avatar, AvatarImage } from "./ui/avatar";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   return (
     <div className="z-10 fixed w-full items-center">
@@ -27,22 +29,42 @@ export default function Header() {
           </Link>
         </div>
         <div className="flex flex-row">
-          <Button variant="ghost" size="icon" asChild>
-            <Link href="/newreview" passHref>
-              <Plus />
-            </Link>
-          </Button>
+          {status === "authenticated" ? (
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/newreview" passHref>
+                <Plus />
+              </Link>
+            </Button>
+          ) : null}
           <SwitchTheme />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
-                <UserCircle />
+                {status === "authenticated" ? (
+                  <Avatar>
+                    <AvatarImage alt="avatar" src={session?.user?.image} />
+                  </Avatar>
+                ) : (
+                  <UserCircle />
+                )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>Ciao, Antonio</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signIn('google')}>Login</DropdownMenuItem>
+              {status === "authenticated" ? (
+                <>
+                  <DropdownMenuLabel>
+                    Ciao, {session.user?.name}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Logout
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <DropdownMenuItem onClick={() => signIn("google")}>
+                  Login
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

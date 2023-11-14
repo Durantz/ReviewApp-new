@@ -8,7 +8,7 @@ import GeoapifyAutocomplete from "@/components/GeoapifyAutocomplete";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import ReviewForm from "@/components/ReviewForm";
-import { schemaType, formSchema, Review } from "@/types";
+import { schemaType, formSchema } from "@/types";
 import { putData } from "@/lib/functions";
 
 export default function AddReview() {

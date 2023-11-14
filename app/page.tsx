@@ -1,8 +1,6 @@
 import ReviewCardList from "@/components/ReviewCardList";
 import { getAllData } from "@/lib/functions";
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   const reviews = await getAllData();
 
