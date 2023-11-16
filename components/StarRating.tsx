@@ -51,12 +51,13 @@ const StarRating: React.FC<StarRating> = ({
     onChange(0);
   };
   return (
-    <motion.div layout className="flex flex-row gap-0.5 ">
+    <motion.div layout className="flex flex-row gap-x-0.5 items-center">
       <LayoutGroup>
         <AnimatePresence mode="wait">
           {!disabled && rating > 0 ? (
             <motion.div
               key="remove"
+              className="flex flex-row items-center"
               variants={animation}
               initial="initial"
               animate="animate"
@@ -79,7 +80,11 @@ const StarRating: React.FC<StarRating> = ({
             </motion.div>
           ) : null}
         </AnimatePresence>
-        <motion.div layout transition={{ duration: 0.2 }}>
+        <motion.div
+          layout
+          transition={{ duration: 0.2 }}
+          className="flex flex-row items-center"
+        >
           {Array.from({ length: 5 }, (_, index) => {
             return (
               <Button

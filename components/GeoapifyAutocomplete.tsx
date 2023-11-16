@@ -57,7 +57,7 @@ const GeoapifyAutocomplete: React.FC<{
         lat: position.coords.latitude,
       });
     });
-  });
+  }, []);
 
   return (
     <div className="grid grid-flow-row gap-1">

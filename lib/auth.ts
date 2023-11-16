@@ -1,4 +1,4 @@
-import type { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
@@ -15,5 +15,22 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async signIn({ account, profile }) {
+      if (profile?.email === "ryukonga@gmail.com") {
+        return true;
+      }
+      return "/";
+    },
+    async jwt({ token, account, profile }) {
+      token.role = "admin";
+      return token;
+    },
+    async session({ session, token, user }) {
+      session.user.role = token?.role;
+
+      return session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
 };

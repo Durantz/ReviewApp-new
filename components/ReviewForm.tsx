@@ -21,9 +21,10 @@ interface ReviewForm {
   form: UseFormReturn<schemaType>;
   onSubmit: (value: schemaType) => void;
   onBack: () => void;
+  role: string | null;
 }
 
-const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack }) => {
+const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
   const latValue = form.watch("latitude", 0);
   const lonValue = form.watch("longitude", 0);
 
@@ -229,27 +230,29 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack }) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="approved"
-          render={({ field }) => (
-            <FormItem className="space-y-1">
-              <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
-              <FormControl>
-                <AnimatedCheckbox
-                  checked={field.value}
-                  onCheckedChange={() =>
-                    form.setValue(field.name, !field.value, {
-                      shouldValidate: true,
-                      shouldDirty: true,
-                    })
-                  }
-                />
-              </FormControl>
-              <FormMessage className="text-xs" />
-            </FormItem>
-          )}
-        />
+        {role === "super-admin" ? (
+          <FormField
+            control={form.control}
+            name="approved"
+            render={({ field }) => (
+              <FormItem className="space-y-1">
+                <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
+                <FormControl>
+                  <AnimatedCheckbox
+                    checked={field.value}
+                    onCheckedChange={() =>
+                      form.setValue(field.name, !field.value, {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      })
+                    }
+                  />
+                </FormControl>
+                <FormMessage className="text-xs" />
+              </FormItem>
+            )}
+          />
+        ) : null}
         <Button className="w-full" type="submit">
           Aggiungi
         </Button>

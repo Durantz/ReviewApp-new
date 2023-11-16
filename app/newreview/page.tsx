@@ -11,6 +11,7 @@ import ReviewForm from "@/components/ReviewForm";
 import { schemaType, formSchema } from "@/types";
 import { putData } from "@/lib/functions";
 import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function AddReview() {
   // const [reviewList, setReview] = useRecoilState(reviews);
@@ -23,6 +24,7 @@ export default function AddReview() {
     defaultValues: {
       restaurant: "",
       address: "",
+      reviewer: "",
       quality: 0,
       location: 0,
       ospitality: 0,
@@ -37,6 +39,7 @@ export default function AddReview() {
 
   const onSubmit = async (values: schemaType) => {
     // console.log({ ...values, id: reviewList.length + 1 });
+    console.log(values);
     const res = await putData(values);
     console.log(res);
     if (res) {
@@ -61,37 +64,44 @@ export default function AddReview() {
     zodForm.setValue("longitude", lon);
   };
 
-  // if (status === "unauthenticated") {
-  //   toast({
-  //     title: "Unauthorized",
-  //     description: "Effettuare la login per poter aggiungere recensioni",
-  //     variant: "destructive",
-  //   });
-  //   router.push("/");
-  //   return null;
-  // }
+  useEffect(() => {
+    if (!session) {
+      router.push("/");
+      toast({
+        variant: "destructive",
+        title: "Unauthorized",
+        description: "Signin",
+      });
+    }
+    zodForm.setValue("reviewer", session?.user.name);
+  }, [session, toast, router, zodForm]);
 
   return (
-    <div className="grid grid-flow-row gap-1 w-auto">
-      <GeoapifyAutocomplete
-        onPlaceSelect={(
-          lat: number,
-          lon: number,
-          restaurant: string,
-          address: string,
-        ) => setFormFields(lat, lon, restaurant, address)}
-        key="autocomplete"
-      />
-      <div className="mt-1 grid grid-cols-3 w-full items-center">
-        <Separator />
-        <Label className="text-center">Nuova Recensione</Label>
-        <Separator />
-      </div>
-      <ReviewForm
-        form={zodForm}
-        onSubmit={(values: schemaType) => onSubmit(values)}
-        onBack={() => router.back()}
-      />
-    </div>
+    <>
+      {status === "authenticated" ? (
+        <div className="grid grid-flow-row gap-1 w-auto">
+          <GeoapifyAutocomplete
+            onPlaceSelect={(
+              lat: number,
+              lon: number,
+              restaurant: string,
+              address: string,
+            ) => setFormFields(lat, lon, restaurant, address)}
+            key="autocomplete"
+          />
+          <div className="mt-1 grid grid-cols-3 w-full items-center">
+            <Separator />
+            <Label className="text-center">Nuova Recensione</Label>
+            <Separator />
+          </div>
+          <ReviewForm
+            form={zodForm}
+            onSubmit={(values: schemaType) => onSubmit(values)}
+            onBack={() => router.back()}
+            role={session?.user?.role}
+          />
+        </div>
+      ) : null}
+    </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { schemaType } from "@/types";
 import { revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
 
 export async function putData(review: schemaType): Promise<boolean> {
   try {
@@ -44,6 +45,7 @@ export async function getAllData() {
   const res = await fetch("http://localhost:3000/api/reviews", {
     headers: {
       "Content-Type": "application/json",
+      Cookie: cookies().toString(),
     },
     cache: "no-store",
     next: {
@@ -51,10 +53,8 @@ export async function getAllData() {
     },
   });
   if (res.status != 200) {
-    console.log(await res.json());
     return [];
   }
   const data = await res.json();
-  console.log(data);
   return data;
 }

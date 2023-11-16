@@ -92,7 +92,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                   {/* <Edit className="w-4 h-4 cursor-pointer" /> */}
                 </span>
               </CardTitle>
-              <CardDescription className="flex flex-col gap-1">
+              <CardDescription className="flex flex-col gap-0.5 justify-items-center">
                 <div>{data.address}</div>
                 <StarRating
                   rating={data.rating}
@@ -100,6 +100,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                   disabled
                   className="w-4 h-4"
                 />
+                <div className="text-xs">di {data.reviewer}</div>
               </CardDescription>
             </motion.div>
           </CardHeader>

@@ -6,7 +6,6 @@ import { authOptions } from "@/lib/auth";
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    console.log("User Session", session?.user);
     if (!session) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -51,10 +50,8 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    console.log("here");
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-    console.log(id);
     const data = await fetch(
       `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/delete?id=${id}`,
       {
