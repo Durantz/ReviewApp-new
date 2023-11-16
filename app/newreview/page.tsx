@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import ReviewForm from "@/components/ReviewForm";
 import { schemaType, formSchema } from "@/types";
 import { putData } from "@/lib/functions";
+import { useSession } from "next-auth/react";
 
 export default function AddReview() {
   // const [reviewList, setReview] = useRecoilState(reviews);
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { toast } = useToast();
   const zodForm = useForm<schemaType>({
@@ -58,6 +60,16 @@ export default function AddReview() {
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
   };
+
+  // if (status === "unauthenticated") {
+  //   toast({
+  //     title: "Unauthorized",
+  //     description: "Effettuare la login per poter aggiungere recensioni",
+  //     variant: "destructive",
+  //   });
+  //   router.push("/");
+  //   return null;
+  // }
 
   return (
     <div className="grid grid-flow-row gap-1 w-auto">

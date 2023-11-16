@@ -36,27 +36,25 @@ export async function deleteReview(id: string) {
     revalidateTag("reviews");
     return new Promise((resolve) => resolve(data));
   } catch (error) {
-    return new Promise((resolve) => resolve(data));
+    return new Promise((resolve) => resolve(error));
   }
 }
 
 export async function getAllData() {
-  try {
-    const res = await fetch("http://localhost:3000/api/reviews", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-      next: {
-        tags: ["reviews"],
-      },
-    });
-    const data = await res.json();
-    // console.log(data);
-    return data;
-  } catch (error) {
-    throw
-    console.log(error);
+  const res = await fetch("http://localhost:3000/api/reviews", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    next: {
+      tags: ["reviews"],
+    },
+  });
+  if (res.status != 200) {
+    console.log(await res.json());
     return [];
   }
+  const data = await res.json();
+  console.log(data);
+  return data;
 }

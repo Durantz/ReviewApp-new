@@ -6,9 +6,10 @@ import { authOptions } from "@/lib/auth";
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
-    console.log(session);
-    if (!session)
-      throw new Error()
+    console.log("User Session", session?.user);
+    if (!session) {
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
     const data = await fetch(
       "https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getAll",
