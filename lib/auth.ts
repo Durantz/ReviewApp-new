@@ -17,7 +17,18 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      if (profile?.email === "ryukonga@gmail.com") {
+      const data = await fetch(
+      `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getUser?email=${profile?.email}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "API-Key": process.env.MONGODB_API_KEY!,
+        },
+        cache: "no-store",
+      },
+    );
+    const dbUser = await data.json();
+      if (dbUser) {
         return true;
       }
       return "/";

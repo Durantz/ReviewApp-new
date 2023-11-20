@@ -73,7 +73,7 @@ export default function AddReview() {
         description: "Signin",
       });
     }
-    zodForm.setValue("reviewer", session?.user.name);
+    zodForm.setValue("reviewer", session?.user.name!);
   }, [session, toast, router, zodForm]);
 
   return (
