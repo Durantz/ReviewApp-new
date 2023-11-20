@@ -230,7 +230,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             </FormItem>
           )}
         />
-        {role === "super-admin" ? (
+        {role === "approver" ? (
           <FormField
             control={form.control}
             name="approved"

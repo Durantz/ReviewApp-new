@@ -1,5 +1,7 @@
 import type { NextAuthOptions, Session } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { DbUser } from "@/types";
+import axios from "axios";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,24 +19,25 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      const data = await fetch(
-      `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getUser?email=${profile?.email}`,
-      {
+      const res = await axios({
+        method: "get",
+        url: `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getUser?email=${profile?.email}`,
         headers: {
           "Content-Type": "application/json",
           "API-Key": process.env.MONGODB_API_KEY!,
         },
-        cache: "no-store",
-      },
-    );
-    const dbUser = await data.json();
-      if (dbUser) {
+      });
+      // console.log(data);
+      console.log(res.data);
+      const dbUser = <DbUser>res.data;
+      if (profile && dbUser) {
+        profile.role = dbUser.role;
         return true;
       }
       return "/";
     },
     async jwt({ token, account, profile }) {
-      token.role = "admin";
+      if (profile) token.role = profile.role;
       return token;
     },
     async session({ session, token, user }) {

@@ -34,6 +34,12 @@ export interface Review {
   approved: boolean;
 }
 
+export type DbUser = {
+  _id: string;
+  name: string;
+  role: string;
+  email: string;
+};
 // const ReviewSchema = new Schema<Review>({
 //   restaurant: { type: String, required: true },
 //   rating: { type: Number, required: false },

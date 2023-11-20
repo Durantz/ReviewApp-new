@@ -42,21 +42,29 @@ const GeoapifyAutocomplete: React.FC<{
   const [position, setPosition] = useState({ lon: 0, lat: 0 });
   const onSelect = (value: any) => {
     const props = value.properties as GeoJSON.GeoJsonProperties;
-    onPlaceSelect(
-      props?.lat,
-      props?.lon,
-      props?.address_line1,
-      props?.address_line2,
-    );
+    if (props.result_type === "amenity") {
+      onPlaceSelect(
+        props?.lat,
+        props?.lon,
+        props?.address_line1,
+        props?.address_line2,
+      );
+    } else {
+      onPlaceSelect(props?.lat, props?.lon, "", props?.formatted);
+    }
   };
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setPosition({
-        lon: position.coords.longitude,
-        lat: position.coords.latitude,
-      });
-    });
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setPosition({
+          lon: position.coords.longitude,
+          lat: position.coords.latitude,
+        });
+      },
+      () => {},
+      { maximumAge: 10000 },
+    );
   }, []);
 
   return (
@@ -89,6 +97,7 @@ const GeoapifyAutocomplete: React.FC<{
                 limit={2}
                 debounceDelay={250}
                 lang="it"
+                type="amenity"
                 placeSelect={onSelect}
                 biasByProximity={position}
               />
