@@ -14,9 +14,10 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { LatLng } from "leaflet";
 
-export default function AddReview() {
+export default function EditReview({ params }: { params: { review: string } }) {
   // const [reviewList, setReview] = useRecoilState(reviews);
   const { data: session, status } = useSession();
+  const [form, setForm] = useState(null);
   const [mapCenter, setMapCenter] = useState(new LatLng(0, 0));
   const router = useRouter();
   const { toast } = useToast();
@@ -46,7 +47,6 @@ export default function AddReview() {
     const res = await putData(values);
     console.log(res);
     if (res) {
-      // setReview([...reviewList, { ...values, id: reviewList.length + 1 }]);
       router.push("/");
       toast({
         title: "Salvataggio eseguito",
@@ -84,7 +84,7 @@ export default function AddReview() {
         description: "Signin",
       });
     }
-
+    
     zodForm.setValue("reviewer", session?.user.name!);
     zodForm.setValue("reviewerEmail", session?.user.email!);
   }, [session, toast, router, zodForm]);

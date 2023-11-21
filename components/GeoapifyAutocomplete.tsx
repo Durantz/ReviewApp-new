@@ -9,6 +9,8 @@ import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { LatLng } from "leaflet";
+import DraggableMap from "@/components/DraggableMap";
 
 const autocompleteAnimation = {
   initial: {
@@ -37,9 +39,22 @@ const GeoapifyAutocomplete: React.FC<{
     restaurant: string,
     address: string,
   ) => void;
-}> = ({ onPlaceSelect }) => {
+  onCoordChange: (lat: number, lon: number) => void;
+  position: LatLng;
+}> = ({ onPlaceSelect, position, onCoordChange }) => {
   const [open, setOpen] = useState(false);
-  const [position, setPosition] = useState({ lon: 0, lat: 0 });
+  const [coord, setCoord] = useState(new LatLng(0, 0));
+
+  useEffect(() => {
+    setCoord(new LatLng(position.lat, position.lng));
+    console.log("GeoapifyAutocomplete change occurred");
+  }, [position]);
+
+  const coordChange = (lat: number, lon: number) => {
+    console.log("coordChange triggered");
+    onCoordChange(lat, lon);
+  };
+
   const onSelect = (value: any) => {
     const props = value.properties as GeoJSON.GeoJsonProperties;
     if (props.result_type === "amenity") {
@@ -53,19 +68,6 @@ const GeoapifyAutocomplete: React.FC<{
       onPlaceSelect(props?.lat, props?.lon, "", props?.formatted);
     }
   };
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setPosition({
-          lon: position.coords.longitude,
-          lat: position.coords.latitude,
-        });
-      },
-      () => {},
-      { maximumAge: 10000 },
-    );
-  }, []);
 
   return (
     <div className="grid grid-flow-row gap-1">
@@ -85,6 +87,7 @@ const GeoapifyAutocomplete: React.FC<{
       <AnimatePresence mode="wait">
         {open && (
           <motion.div
+            className="flex flex-col gap-1"
             key="search"
             variants={autocompleteAnimation}
             animate="animate"
@@ -97,11 +100,11 @@ const GeoapifyAutocomplete: React.FC<{
                 limit={2}
                 debounceDelay={250}
                 lang="it"
-                type="amenity"
                 placeSelect={onSelect}
                 biasByProximity={position}
               />
             </GeoapifyContext>
+            <DraggableMap mapCenter={coord} setCoords={coordChange} />
           </motion.div>
         )}
       </AnimatePresence>

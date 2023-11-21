@@ -8,15 +8,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import markerUrl from "@/public/map_marker_2.png";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  useMapEvent,
+} from "react-leaflet";
+import { markerIcon } from "@/lib/markerIcon";
 import StarRating from "@/components/StarRating";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 
 import { Review } from "@/types";
@@ -49,16 +56,13 @@ const additionalData = {
 
 interface ReviewCard {
   data: Review;
+  canEditDelete: boolean;
 }
 
-const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
+const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
   const center = [data.latitude, data.longitude];
   const [active, setActive] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
-  const markerIcon = new L.Icon({
-    iconUrl: markerUrl.src,
-    iconSize: [markerUrl.width * 0.5, markerUrl.height * 0.5],
-  });
 
   const deleteMe = async (id: string) => {
     console.log(id);
@@ -66,6 +70,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
     console.log(data);
     setOpenPopover(false);
   };
+  const isIos = () => Boolean(navigator.userAgent.match(/iPhone|iPad|iPod/i));
 
   return (
     <>
@@ -93,7 +98,18 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                 </span>
               </CardTitle>
               <CardDescription className="flex flex-col gap-0.5 justify-items-center">
-                <div>{data.address}</div>
+                <div>
+                  <a
+                    target="_blank"
+                    href={
+                      !isIos()
+                        ? `https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.latitude},${data.longitude}`
+                        : `https://maps.apple.com/?daddr=${data.address}&t=r&dirflg=d`
+                    }
+                  >
+                    {data.address}
+                  </a>
+                </div>
                 <StarRating
                   rating={data.rating}
                   onChange={() => {}}
@@ -126,6 +142,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
+                  <MapController />
                   <Marker position={center} icon={markerIcon}>
                     <Popup>{data.address}</Popup>
                   </Marker>
@@ -224,52 +241,46 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
                     >
                       <Separator />
                     </motion.div>
-                    <motion.div
-                      layout
-                      variants={additionalData}
-                      className="flex flex-row justify-between col-span-2"
-                    >
-                      <Popover open={openPopover}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant={"destructive"}
-                            className="h-8"
-                            onClick={() => setOpenPopover(true)}
-                          >
-                            Elimina
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-60"
-                          side="left"
-                          onInteractOutside={() => setOpenPopover(false)}
-                        >
-                          <div className="w-full grid cols-1 gap-1 place-items-center">
-                            <p className="text-sm text-center">
-                              Vuoi eliminare la recensione?
-                            </p>
-                            <Button
-                              variant={"default"}
-                              className="h-6 text-xs w-1/2"
-                              onClick={() => deleteMe(data._id)}
-                            >
-                              Conferma
-                            </Button>
-                            {/* <Button
-                        variant={"ghost"}
-                        className="h-6 text-xs"
-                        type="reset"
-                        onClick={() => setOpenPopover(false)}
+                    {canEditDelete ? (
+                      <motion.div
+                        layout
+                        variants={additionalData}
+                        className="flex flex-row justify-between col-span-2"
                       >
-                        Annulla
-                      </Button> */}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                      <Button variants="secondary" className="h-8">
-                        Modifica
-                      </Button>
-                    </motion.div>
+                        <Popover open={openPopover}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"destructive"}
+                              className="h-8"
+                              onClick={() => setOpenPopover(true)}
+                            >
+                              Elimina
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-60"
+                            side="left"
+                            onInteractOutside={() => setOpenPopover(false)}
+                          >
+                            <div className="w-full grid cols-1 gap-1 place-items-center">
+                              <p className="text-sm text-center">
+                                Vuoi eliminare la recensione?
+                              </p>
+                              <Button
+                                variant={"default"}
+                                className="h-6 text-xs w-1/2"
+                                onClick={() => deleteMe(data._id)}
+                              >
+                                Conferma
+                              </Button>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                        <Button variants="secondary" className="h-8">
+                          <Link href={`/editreview/${data._id}`}>Modifica</Link>
+                        </Button>
+                      </motion.div>
+                    ) : null}
                   </motion.div>
                 </>
               )}
@@ -306,5 +317,19 @@ const ReviewCard: React.FC<ReviewCard> = ({ data }) => {
     </>
   );
 };
+
+function MapController() {
+  const map = useMap();
+
+  const mapEvent = useMapEvent("click", (e: MouseEvent) => {
+    if (map.getZoom() == 17) {
+      map.setZoom(14, { duration: 3 });
+    } else {
+      map.setZoom(17, { duration: 3 });
+    }
+  });
+
+  return null;
+}
 
 export default ReviewCard;

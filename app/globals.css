@@ -12,7 +12,7 @@
   @apply flex flex-row px-1 py-2 gap-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700;
 }
 .geoapify-autocomplete-items {
-  @apply absolute bg-card w-full border mt-2 rounded-md;
+  @apply absolute z-10 bg-card w-full border mt-2 rounded-md;
 }
 .geoapify-autocomplete-item .icon {
   @apply text-primary mx-1;

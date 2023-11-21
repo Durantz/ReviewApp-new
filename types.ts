@@ -5,6 +5,7 @@ export const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
   address: z.string().min(10, "Inserire l'indirizzo"),
   reviewer: z.string(),
+  reviewerEmail: z.string(),
   quality: z.number(),
   location: z.number(),
   plates: z.number(),
@@ -23,6 +24,7 @@ export interface Review {
   restaurant: string;
   rating: number;
   reviewer: string;
+  reviewerEmail: string;
   quality: number;
   plates: number;
   ospitality: number;

@@ -6,12 +6,19 @@ import ToasterWrapper from "@/components/ToasterWrapper";
 import ThemeProvider from "@/components/ThemeProvider";
 import RecoilRootProvider from "@/components/RecoilRootProvider";
 import SessionProvider from "@/components/AuthProvider";
+import "leaflet/dist/leaflet.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Recensioni Faziose",
   description: "Recensiamo qualsiasi cosa con criteri discutibili!",
+};
+export const viewport = {
+  width: "device-width",
+  initialScale: "1.0",
+  maximumScale: "1.0",
+  userScalable: 0,
 };
 
 export default function RootLayout({
@@ -21,18 +28,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-          crossOrigin=""
-        />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
-        />
-      </head>
       <body className={cn(inter.className, " bg-cover bg-fixed")}>
         <SessionProvider>
           <RecoilRootProvider>
