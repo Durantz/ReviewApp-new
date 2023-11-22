@@ -57,7 +57,7 @@ const GeoapifyAutocomplete: React.FC<{
 
   const onSelect = (value: any) => {
     const props = value.properties as GeoJSON.GeoJsonProperties;
-    if (props.result_type === "amenity") {
+    if (props?.result_type === "amenity") {
       onPlaceSelect(
         props?.lat,
         props?.lon,
