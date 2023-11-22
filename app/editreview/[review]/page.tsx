@@ -91,7 +91,7 @@ export default function EditReview({ params }: { params: { review: string } }) {
       zodForm.reset(review);
     }
     getReviewDb();
-  }, [params.review]);
+  }, [params.review, zodForm]);
 
   return (
     <>
@@ -116,7 +116,6 @@ export default function EditReview({ params }: { params: { review: string } }) {
           {dbReview ? (
             <ReviewForm
               form={zodForm}
-              formDefaultValues={dbReview}
               onSubmit={(values: schemaType) => onSubmit(values)}
               onBack={() => router.back()}
               role={session?.user?.role}
