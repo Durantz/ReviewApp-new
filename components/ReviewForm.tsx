@@ -19,19 +19,12 @@ import { Review, schemaType } from "@/types";
 
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
-  formDefaultValues: any;
   onSubmit: (value: schemaType) => void;
   onBack: () => void;
   role: string | null;
 }
 
-const ReviewForm: React.FC<ReviewForm> = ({
-  form,
-  formDefaultValues,
-  onSubmit,
-  onBack,
-  role,
-}) => {
+const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
   const latValue = form.watch("latitude", 0);
   const lonValue = form.watch("longitude", 0);
 
