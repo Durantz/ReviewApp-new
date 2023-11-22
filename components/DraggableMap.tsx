@@ -1,4 +1,4 @@
-import { LatLng } from "leaflet";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 import { useEffect, useState, useMemo } from "react";
 import { markerIcon } from "@/lib/markerIcon";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -50,7 +50,7 @@ function MapController({
 }) {
   const [markerCenter, setMarkerCenter] = useState(() => coords);
   const map = useMap();
-  const mapEvent = useMapEvent("click", (e: MouseEvent) => {
+  const mapEvent = useMapEvent("click", (e: LeafletMouseEvent) => {
     setMarkerCenter(new LatLng(e.latlng.lat, e.latlng.lng));
     setCoords(e.latlng.lat, e.latlng.lng);
   });
@@ -61,7 +61,7 @@ function MapController({
     }
     map.flyTo(coords);
     setMarkerCenter(coords);
-  }, [coords]);
+  }, [coords, map]);
 
   return <Marker position={markerCenter} icon={markerIcon}></Marker>;
 }
