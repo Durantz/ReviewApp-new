@@ -30,6 +30,7 @@ import { Review } from "@/types";
 import { Edit } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { deleteReview } from "@/lib/functions";
+import { LatLng, LeafletMouseEvent } from "leaflet";
 
 const googleIcon = (
   <svg
@@ -110,7 +111,7 @@ interface ReviewCard {
 }
 
 const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
-  const center = [data.latitude, data.longitude];
+  const [center] = useState(new LatLng(data.latitude,data.longitude))
   const [active, setActive] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -343,7 +344,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
                             </div>
                           </PopoverContent>
                         </Popover>
-                        <Button variants="secondary" className="h-8">
+                        <Button variant="secondary" className="h-8">
                           <Link href={`/editreview/${data._id}`}>Modifica</Link>
                         </Button>
                       </motion.div>
@@ -388,7 +389,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
 function MapController() {
   const map = useMap();
 
-  const mapEvent = useMapEvent("click", (e: MouseEvent) => {
+  const mapEvent = useMapEvent("click", (e: LeafletMouseEvent) => {
     if (map.getZoom() == 17) {
       map.setZoom(14, { duration: 3 });
     } else {

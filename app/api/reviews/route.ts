@@ -2,12 +2,13 @@
 
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) {
-      return Response.json({ message: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -35,9 +36,9 @@ export async function GET(req: Request) {
       );
     }
     const reviews = await data.json();
-    return Response.json(reviews, { status: 200 });
+    return NextResponse.json(reviews, { status: 200 });
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    return NextResponse.json(error, { status: 400 });
   }
 }
 
@@ -56,9 +57,9 @@ export async function POST(req: Request) {
       },
     );
     const message = await data.json();
-    return Response.json(message, { status: 200 });
+    return NextResponse.json(message, { status: 200 });
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    return NextResponse.json(error, { status: 400 });
   }
 }
 
@@ -77,8 +78,8 @@ export async function DELETE(req: Request) {
       },
     );
     const results = await data.json();
-    return Response.json(results, { status: 200 });
+    return NextResponse.json(results, { status: 200 });
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    return NextResponse.json(error, { status: 400 });
   }
 }

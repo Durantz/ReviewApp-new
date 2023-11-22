@@ -101,7 +101,7 @@ const GeoapifyAutocomplete: React.FC<{
                 debounceDelay={250}
                 lang="it"
                 placeSelect={onSelect}
-                biasByProximity={position}
+                biasByProximity={{ lat: position.lat, lon: position.lng }}
               />
             </GeoapifyContext>
             <DraggableMap mapCenter={coord} setCoords={coordChange} />

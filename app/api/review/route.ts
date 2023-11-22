@@ -1,5 +1,7 @@
 "use server";
 
+import { NextResponse } from "next/server";
+
 export async function POST(req: Request) {
   const body = await req.json();
   const { searchParams } = new URL(req.url);
@@ -17,8 +19,8 @@ export async function POST(req: Request) {
       },
     );
     const message = await data.json();
-    return Response.json(message, { status: 200 });
+    return NextResponse.json(message, { status: 200 });
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    return NextResponse.json(error, { status: 400 });
   }
 }

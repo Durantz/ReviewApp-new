@@ -42,7 +42,7 @@ export default function Header() {
               <Button variant="ghost" size="icon">
                 {status === "authenticated" ? (
                   <Avatar>
-                    <AvatarImage alt="avatar" src={session?.user?.image} />
+                    <AvatarImage alt="avatar" src={session?.user?.image!} />
                   </Avatar>
                 ) : (
                   <UserCircle />
