@@ -56,14 +56,11 @@ function MapController({
   });
 
   useEffect(() => {
-    console.log("coords -->", coords);
-    console.log("Map center -->", map.getCenter());
     if (map.getBounds().contains(coords)) {
       console.log(map.getBounds());
     }
     map.flyTo(coords);
     setMarkerCenter(coords);
-    console.log("Map controller change occurred");
   }, [coords]);
 
   return <Marker position={markerCenter} icon={markerIcon}></Marker>;

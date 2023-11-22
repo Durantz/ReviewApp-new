@@ -23,6 +23,29 @@ export async function putData(review: schemaType): Promise<boolean> {
     return new Promise((resolve) => resolve(false));
   }
 }
+export async function updateData(
+  review: schemaType,
+  id: string,
+): Promise<boolean> {
+  try {
+    const stringRev = JSON.stringify(review);
+    console.log(stringRev);
+    const res = await fetch(`http://localhost:3000/api/review?id=${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: stringRev,
+    });
+    const data = await res.json();
+    console.log(data);
+    revalidateTag("reviews");
+    return new Promise((resolve) => resolve(true));
+  } catch (error) {
+    console.log(error);
+    return new Promise((resolve) => resolve(false));
+  }
+}
 
 export async function deleteReview(id: string) {
   try {
@@ -65,6 +88,7 @@ export async function getReview(id: string) {
       Cookie: cookies().toString(),
     },
   });
+  console.log(res.status);
   if (res.status != 200) {
     return [];
   }

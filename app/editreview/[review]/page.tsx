@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import ReviewForm from "@/components/ReviewForm";
 import { schemaType, formSchema, Review } from "@/types";
-import { getReview, putData } from "@/lib/functions";
+import { getReview, updateData } from "@/lib/functions";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { LatLng } from "leaflet";
@@ -24,13 +24,26 @@ export default function EditReview({ params }: { params: { review: string } }) {
   const zodForm = useForm<schemaType>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
+    defaultValues: {
+      restaurant: "",
+      address: "",
+      reviewer: "",
+      reviewerEmail: "",
+      quality: 0,
+      location: 0,
+      ospitality: 0,
+      plates: 0,
+      rating: 0,
+      approved: false,
+      notes: "",
+      latitude: 0,
+      longitude: 0,
+    },
   });
 
   const onSubmit = async (values: schemaType) => {
     // console.log({ ...values, id: reviewList.length + 1 });
-    console.log(values);
-    const res = await putData(values);
-    console.log(res);
+    const res = await updateData(values, params.review);
     if (res) {
       router.push("/");
       toast({
@@ -57,7 +70,6 @@ export default function EditReview({ params }: { params: { review: string } }) {
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
     setMapCenter(new LatLng(lat, lon));
-    console.log("setCoords triggered");
   };
 
   useEffect(() => {
@@ -69,28 +81,17 @@ export default function EditReview({ params }: { params: { review: string } }) {
         description: "Signin",
       });
     }
+  }, [session, toast, router]);
+
+  useEffect(() => {
     async function getReviewDb() {
       const review = await getReview(params.review);
       setDbReview(review);
+      setMapCenter(new LatLng(review?.latitude, review?.longitude));
+      zodForm.reset(review);
     }
     getReviewDb();
-  }, [session, toast, router, params.review]);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        navigator.geolocation.getCurrentPosition((position) => {
-          let coords = new LatLng(
-            position.coords.latitude,
-            position.coords.longitude,
-          );
-          setMapCenter(coords);
-        });
-      },
-      null,
-      { maximumAge: 600000 },
-    );
-  }, []);
+  }, [params.review]);
 
   return (
     <>

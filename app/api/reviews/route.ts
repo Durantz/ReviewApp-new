@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     let data = null;
-    if (id){
+    if (id) {
       data = await fetch(
         `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getReview?id=${id}`,
         {
@@ -20,7 +20,6 @@ export async function GET(req: Request) {
             "Content-Type": "application/json",
             "API-Key": process.env.MONGODB_API_KEY!,
           },
-          cache: "no-store",
         },
       );
     } else {
@@ -36,7 +35,7 @@ export async function GET(req: Request) {
       );
     }
     const reviews = await data.json();
-    return Response.json(reviews.data, { status: 200 });
+    return Response.json(reviews, { status: 200 });
   } catch (error) {
     return Response.json(error, { status: 400 });
   }

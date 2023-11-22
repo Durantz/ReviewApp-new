@@ -2,8 +2,6 @@
 
 import { LayoutGroup } from "framer-motion";
 import ReviewCard from "@/components/ReviewCard";
-import { useRecoilValue } from "recoil";
-import { reviews } from "@/states";
 import { Review } from "@/types";
 import { useSession } from "next-auth/react";
 
