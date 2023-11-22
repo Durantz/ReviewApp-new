@@ -20,24 +20,24 @@ export default function AddReview() {
   const [mapCenter, setMapCenter] = useState(new LatLng(0, 0));
   const router = useRouter();
   const { toast } = useToast();
+  const formDefaultValues = {
+    restaurant: "",
+    address: "",
+    reviewer: "",
+    reviewerEmail: "",
+    quality: 0,
+    location: 0,
+    ospitality: 0,
+    plates: 0,
+    rating: 0,
+    approved: false,
+    notes: "",
+    latitude: 0,
+    longitude: 0,
+  };
   const zodForm = useForm<schemaType>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
-    defaultValues: {
-      restaurant: "",
-      address: "",
-      reviewer: "",
-      reviewerEmail: "",
-      quality: 0,
-      location: 0,
-      ospitality: 0,
-      plates: 0,
-      rating: 0,
-      approved: false,
-      notes: "",
-      latitude: 0,
-      longitude: 0,
-    },
   });
 
   const onSubmit = async (values: schemaType) => {
@@ -84,7 +84,6 @@ export default function AddReview() {
         description: "Signin",
       });
     }
-
     zodForm.setValue("reviewer", session?.user.name!);
     zodForm.setValue("reviewerEmail", session?.user.email!);
   }, [session, toast, router, zodForm]);
@@ -127,6 +126,7 @@ export default function AddReview() {
           </div>
           <ReviewForm
             form={zodForm}
+            formDefaultValues={formDefaultValues}
             onSubmit={(values: schemaType) => onSubmit(values)}
             onBack={() => router.back()}
             role={session?.user?.role}

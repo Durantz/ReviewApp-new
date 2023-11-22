@@ -15,16 +15,17 @@ import StarRating from "./StarRating";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Separator } from "./ui/separator";
-import { schemaType } from "@/types";
+import { Review, schemaType } from "@/types";
 
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
+  formDefaultValues: Review;
   onSubmit: (value: schemaType) => void;
   onBack: () => void;
   role: string | null;
 }
 
-const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
+const ReviewForm: React.FC<ReviewForm> = ({ form, formDefaultValues,onSubmit, onBack, role }) => {
   const latValue = form.watch("latitude", 0);
   const lonValue = form.watch("longitude", 0);
 
@@ -34,6 +35,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
         <FormField
           control={form.control}
           name="restaurant"
+          defaultValue={formDefaultValues.restaurant}
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Nome</FormLabel>
@@ -56,6 +58,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
         <FormField
           control={form.control}
           name="address"
+          defaultValue={formDefaultValues.address}
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Indirizzo</FormLabel>
@@ -104,6 +107,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           <FormField
             control={form.control}
             name="quality"
+            defaultValue={formDefaultValues.quality}
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Prodotti</FormLabel>
@@ -126,6 +130,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           <FormField
             control={form.control}
             name="plates"
+            defaultValue={formDefaultValues.plates}
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Piatti</FormLabel>
@@ -148,6 +153,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           <FormField
             control={form.control}
             name="ospitality"
+            defaultValue={formDefaultValues.ospitality}
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Ospitalità</FormLabel>
@@ -170,6 +176,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           <FormField
             control={form.control}
             name="location"
+            defaultValue={formDefaultValues.location}
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Location</FormLabel>
@@ -193,6 +200,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
         <FormField
           control={form.control}
           name="notes"
+          defaultValue={formDefaultValues.notes}
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Note</FormLabel>
@@ -210,6 +218,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
         <FormField
           control={form.control}
           name="rating"
+          defaultValue={formDefaultValues.rating}
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Punteggio Finale</FormLabel>
@@ -234,6 +243,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           <FormField
             control={form.control}
             name="approved"
+            defaultValue={formDefaultValues.approved}
             render={({ field }) => (
               <FormItem className="space-y-1">
                 <FormLabel>Approvato da Spaccavacciuolo</FormLabel>

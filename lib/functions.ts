@@ -58,3 +58,16 @@ export async function getAllData() {
   const data = await res.json();
   return data;
 }
+export async function getReview(id: string) {
+  const res = await fetch(`http://localhost:3000/api/reviews?id=${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: cookies().toString(),
+    },
+  });
+  if (res.status != 200) {
+    return [];
+  }
+  const data = await res.json();
+  return data;
+}
