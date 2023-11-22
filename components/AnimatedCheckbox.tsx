@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig, {
-  type Colors,
-  type DefaultColors,
-} from "../tailwind.config";
-
+import tailwindConfig from "../tailwind.config";
 const tw = resolveConfig(tailwindConfig);
+
+import defaultColors from "tailwindcss/colors";
+
+export type DefaultColors = typeof defaultColors;
 const { theme } = tw as unknown as {
-  theme: (typeof tw)["theme"] & { colors: DefaultColors & Colors };
+  theme: (typeof tw)["theme"] & { colors: DefaultColors };
 };
 interface AnimatedCheckbox {
   checked: boolean;

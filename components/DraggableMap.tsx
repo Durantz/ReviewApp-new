@@ -2,7 +2,7 @@ import { LatLng } from "leaflet";
 import { useEffect, useState, useMemo } from "react";
 import { markerIcon } from "@/lib/markerIcon";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useMap, useMapEvent } from "react-leaflet/hooks";
+import { useMap, useMapEvent } from "react-leaflet/lib/hooks";
 
 export default function DraggableMap({
   setCoords,
