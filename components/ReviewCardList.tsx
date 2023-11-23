@@ -6,7 +6,6 @@ import { Review } from "@/types";
 import { useSession } from "next-auth/react";
 
 const ReviewCardList: React.FC<{ reviews: Review[] }> = ({ reviews }) => {
-  // const reviewList = useRecoilValue(reviews);
   const { data: session, status } = useSession();
 
   return (

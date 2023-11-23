@@ -42,18 +42,3 @@ export type DbUser = {
   role: string;
   email: string;
 };
-// const ReviewSchema = new Schema<Review>({
-//   restaurant: { type: String, required: true },
-//   rating: { type: Number, required: false },
-//   productQuality: { type: Number, required: false },
-//   plates: { type: Number, required: false },
-//   ospitality: { type: Number, required: false },
-//   location: { type: Number, required: false },
-//   reviewNotes: { type: String, required: false },
-//   longitude: { type: Number, required: false, default: 0 },
-//   latitude: { type: Number, required: false, default: 0 },
-//   address: { type: String, required: true },
-//   approved: { type: Boolean, required: false, default: false },
-// });
-
-// export const ReviewModel = model("Review", ReviewSchema);
