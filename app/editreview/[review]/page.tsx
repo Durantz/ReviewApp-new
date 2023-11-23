@@ -8,17 +8,15 @@ import GeoapifyAutocomplete from "@/components/GeoapifyAutocomplete";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import ReviewForm from "@/components/ReviewForm";
-import { schemaType, formSchema, Review } from "@/types";
+import { schemaType, formSchema } from "@/types";
 import { getReview, updateData } from "@/lib/functions";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { LatLng } from "leaflet";
 
 export default function EditReview({ params }: { params: { review: string } }) {
-  // const [reviewList, setReview] = useRecoilState(reviews);
   const { data: session, status } = useSession();
   const [dbReview, setDbReview] = useState(null);
-  const [mapCenter, setMapCenter] = useState(new LatLng(0, 0));
+  const [mapCenter, setMapCenter] = useState([0, 0]);
   const router = useRouter();
   const { toast } = useToast();
   const zodForm = useForm<schemaType>({
@@ -42,7 +40,6 @@ export default function EditReview({ params }: { params: { review: string } }) {
   });
 
   const onSubmit = async (values: schemaType) => {
-    // console.log({ ...values, id: reviewList.length + 1 });
     const res = await updateData(values, params.review);
     if (res) {
       router.push("/");
@@ -63,13 +60,13 @@ export default function EditReview({ params }: { params: { review: string } }) {
     zodForm.setValue("address", address);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
-    setMapCenter(new LatLng(lat, lon));
+    setMapCenter([lat, lon]);
   };
 
   const setCoords = (lat: number, lon: number) => {
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
-    setMapCenter(new LatLng(lat, lon));
+    setMapCenter([lat, lon]);
   };
 
   useEffect(() => {
@@ -87,7 +84,7 @@ export default function EditReview({ params }: { params: { review: string } }) {
     async function getReviewDb() {
       const review = await getReview(params.review);
       setDbReview(review);
-      setMapCenter(new LatLng(review?.latitude, review?.longitude));
+      setMapCenter([review?.latitude, review?.longitude]);
       zodForm.reset(review);
     }
     getReviewDb();
@@ -104,7 +101,7 @@ export default function EditReview({ params }: { params: { review: string } }) {
               restaurant: string,
               address: string,
             ) => setFormFields(lat, lon, restaurant, address)}
-            position={mapCenter}
+            position={[mapCenter[0], mapCenter[1]]}
             onCoordChange={setCoords}
             key="autocomplete"
           />

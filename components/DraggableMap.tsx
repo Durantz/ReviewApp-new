@@ -1,17 +1,30 @@
 import { LatLng, LeafletMouseEvent } from "leaflet";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { markerIcon } from "@/lib/markerIcon";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useMap, useMapEvent } from "react-leaflet";
+import {
+  useMap,
+  useMapEvent,
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import dynamic from "next/dynamic";
 
 export default function DraggableMap({
   setCoords,
   mapCenter,
 }: {
   setCoords: (lat: number, lon: number) => void;
-  mapCenter: LatLng;
+  mapCenter: [number, number];
 }) {
+  const [center, setCenter] = useState(new LatLng(0, 0));
+
+  useEffect(() => {
+    setCenter(new LatLng(mapCenter[0], mapCenter[1]));
+  }, [mapCenter]);
   const setMapCoords = (lat: number, lon: number) => {
+    setCenter(new LatLng(lat, lon));
     setCoords(lat, lon);
   };
 
@@ -19,7 +32,7 @@ export default function DraggableMap({
     <div className="flex justify-center h-56 ">
       <MapContainer
         className="z-0 h-full rounded-md w-full md:w-1/2"
-        center={mapCenter}
+        center={new LatLng(mapCenter[0], mapCenter[1])}
         dragging
         touchZoom
         doubleClickZoom
@@ -31,11 +44,11 @@ export default function DraggableMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-
         <MapController
-          coords={mapCenter}
+          coords={center}
           setCoords={(lat, lon) => setMapCoords(lat, lon)}
         />
+        <Marker position={center} icon={markerIcon}></Marker>
       </MapContainer>
     </div>
   );
@@ -48,20 +61,14 @@ function MapController({
   coords: LatLng;
   setCoords: (lat: number, lon: number) => void;
 }) {
-  const [markerCenter, setMarkerCenter] = useState(() => coords);
   const map = useMap();
-  const mapEvent = useMapEvent("click", (e: LeafletMouseEvent) => {
-    setMarkerCenter(new LatLng(e.latlng.lat, e.latlng.lng));
+  useMapEvent("click", (e: LeafletMouseEvent) => {
     setCoords(e.latlng.lat, e.latlng.lng);
   });
 
   useEffect(() => {
-    if (map.getBounds().contains(coords)) {
-      console.log(map.getBounds());
-    }
     map.flyTo(coords);
-    setMarkerCenter(coords);
   }, [coords, map]);
 
-  return <Marker position={markerCenter} icon={markerIcon}></Marker>;
+  return null;
 }

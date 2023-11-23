@@ -4,13 +4,12 @@ import {
   GeoapifyContext,
   GeoapifyGeocoderAutocomplete,
 } from "@geoapify/react-geocoder-autocomplete";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LatLng } from "leaflet";
-import DraggableMap from "@/components/DraggableMap";
+import dynamic from "next/dynamic";
 
 const autocompleteAnimation = {
   initial: {
@@ -40,14 +39,20 @@ const GeoapifyAutocomplete: React.FC<{
     address: string,
   ) => void;
   onCoordChange: (lat: number, lon: number) => void;
-  position: LatLng;
+  position: [number, number];
 }> = ({ onPlaceSelect, position, onCoordChange }) => {
   const [open, setOpen] = useState(false);
-  const [coord, setCoord] = useState(new LatLng(0, 0));
-
+  const [coord, setCoord] = useState([0, 0]);
+  const DraggableMap = useMemo(
+    () =>
+      dynamic(() => import("@/components/DraggableMap"), {
+        ssr: false,
+        loading: () => <p>A map is loading</p>,
+      }),
+    [],
+  );
   useEffect(() => {
-    setCoord(new LatLng(position.lat, position.lng));
-    console.log("GeoapifyAutocomplete change occurred");
+    setCoord([position[0], position[1]]);
   }, [position]);
 
   const coordChange = (lat: number, lon: number) => {
@@ -101,10 +106,13 @@ const GeoapifyAutocomplete: React.FC<{
                 debounceDelay={250}
                 lang="it"
                 placeSelect={onSelect}
-                biasByProximity={{ lat: position.lat, lon: position.lng }}
+                biasByProximity={{ lat: position[0], lon: position[0] }}
               />
             </GeoapifyContext>
-            <DraggableMap mapCenter={coord} setCoords={coordChange} />
+            <DraggableMap
+              mapCenter={[coord[0], coord[1]]}
+              setCoords={coordChange}
+            />
           </motion.div>
         )}
       </AnimatePresence>

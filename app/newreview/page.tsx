@@ -12,17 +12,16 @@ import { schemaType, formSchema } from "@/types";
 import { putData } from "@/lib/functions";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { LatLng } from "leaflet";
 
 export default function AddReview() {
   const { data: session, status } = useSession();
-  const [mapCenter, setMapCenter] = useState(new LatLng(0, 0));
+  const [mapCenter, setMapCenter] = useState([0, 0]);
   const router = useRouter();
   const { toast } = useToast();
   const zodForm = useForm<schemaType>({
     resolver: zodResolver(formSchema),
     mode: "onChange",
-    defaultValues:{
+    defaultValues: {
       restaurant: "",
       address: "",
       reviewer: "",
@@ -36,7 +35,7 @@ export default function AddReview() {
       notes: "",
       latitude: 0,
       longitude: 0,
-    }
+    },
   });
 
   const onSubmit = async (values: schemaType) => {
@@ -60,13 +59,13 @@ export default function AddReview() {
     zodForm.setValue("address", address);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
-    setMapCenter(new LatLng(lat, lon));
+    setMapCenter([lat, lon]);
   };
 
   const setCoords = (lat: number, lon: number) => {
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
-    setMapCenter(new LatLng(lat, lon));
+    setMapCenter([lat, lon]);
   };
 
   useEffect(() => {
@@ -85,13 +84,8 @@ export default function AddReview() {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        navigator.geolocation.getCurrentPosition((position) => {
-          let coords = new LatLng(
-            position.coords.latitude,
-            position.coords.longitude,
-          );
-          setMapCenter(coords);
-        });
+        let coords = [position.coords.latitude, position.coords.longitude];
+        setMapCenter(coords);
       },
       null,
       { maximumAge: 600000 },
@@ -109,7 +103,7 @@ export default function AddReview() {
               restaurant: string,
               address: string,
             ) => setFormFields(lat, lon, restaurant, address)}
-            position={mapCenter}
+            position={[mapCenter[0], mapCenter[1]]}
             onCoordChange={setCoords}
             key="autocomplete"
           />

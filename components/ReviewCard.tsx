@@ -23,14 +23,14 @@ import {
 import { markerIcon } from "@/lib/markerIcon";
 import StarRating from "@/components/StarRating";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 import { Review } from "@/types";
-import { Edit } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { deleteReview } from "@/lib/functions";
 import { LatLng, LeafletMouseEvent } from "leaflet";
+import dynamic from "next/dynamic";
 
 const googleIcon = (
   <svg
@@ -111,7 +111,7 @@ interface ReviewCard {
 }
 
 const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
-  const [center] = useState(new LatLng(data.latitude,data.longitude))
+  const [center] = useState(new LatLng(data.latitude, data.longitude));
   const [active, setActive] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -121,8 +121,14 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
     console.log(data);
     setOpenPopover(false);
   };
-  const isIos = () => Boolean(navigator.userAgent.match(/iPhone|iPad|iPod/i));
-
+  const DynamicMap = useMemo(
+    () =>
+      dynamic(() => import("@/components/ReadOnlyDynamicMap"), {
+        ssr: false,
+        loading: () => <p>A map is loading</p>,
+      }),
+    [],
+  );
   return (
     <>
       <motion.div
@@ -195,26 +201,10 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
                   <p className="text-center text-sm">Nessuna posizione</p>
                 </div>
               ) : (
-                <MapContainer
-                  center={center}
-                  zoom={17}
-                  className="z-0 h-full rounded-md"
-                  dragging={false}
-                  scrollWheelZoom={false}
-                  doubleClickZoom={false}
-                  touchZoom={false}
-                  zoomControl={false}
-                  attributionControl={false}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  <MapController />
-                  <Marker position={center} icon={markerIcon}>
-                    <Popup>{data.address}</Popup>
-                  </Marker>
-                </MapContainer>
+                <DynamicMap
+                  center={[data.latitude, data.longitude]}
+                  popupText={data.address}
+                />
               )}
             </motion.div>
             <AnimatePresence mode="wait">
