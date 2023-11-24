@@ -7,8 +7,7 @@ import { cookies } from "next/headers";
 export async function putData(review: schemaType): Promise<boolean> {
   try {
     const stringRev = JSON.stringify(review);
-    console.log(stringRev);
-    const res = await fetch("http://localhost:3000/api/reviews/", {
+    const res = await fetch(`${process.env.API_URL}/api/reviews/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -29,8 +28,7 @@ export async function updateData(
 ): Promise<boolean> {
   try {
     const stringRev = JSON.stringify(review);
-    console.log(stringRev);
-    const res = await fetch(`http://localhost:3000/api/review?id=${id}`, {
+    const res = await fetch(`${process.env.API_URL}/api/review?id=${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,18 +36,16 @@ export async function updateData(
       body: stringRev,
     });
     const data = await res.json();
-    console.log(data);
     revalidateTag("reviews");
     return new Promise((resolve) => resolve(true));
   } catch (error) {
-    console.log(error);
     return new Promise((resolve) => resolve(false));
   }
 }
 
 export async function deleteReview(id: string) {
   try {
-    const res = await fetch(`http://localhost:3000/api/reviews?id=${id}`, {
+    const res = await fetch(`${process.env.API_URL}/api/reviews?id=${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +61,7 @@ export async function deleteReview(id: string) {
 }
 
 export async function getAllData() {
-  const res = await fetch("http://localhost:3000/api/reviews", {
+  const res = await fetch(`${process.env.API_URL}/api/reviews`, {
     headers: {
       "Content-Type": "application/json",
       Cookie: cookies().toString(),
@@ -82,13 +78,12 @@ export async function getAllData() {
   return data;
 }
 export async function getReview(id: string) {
-  const res = await fetch(`http://localhost:3000/api/reviews?id=${id}`, {
+  const res = await fetch(`${process.env.API_URL}/api/reviews?id=${id}`, {
     headers: {
       "Content-Type": "application/json",
       Cookie: cookies().toString(),
     },
   });
-  console.log(res.status);
   if (res.status != 200) {
     return [];
   }
