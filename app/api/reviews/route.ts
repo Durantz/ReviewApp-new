@@ -44,7 +44,6 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const body = await req.json();
-  console.log(body);
   try {
     const data = await fetch(
       "https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/add",

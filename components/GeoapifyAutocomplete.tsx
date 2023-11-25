@@ -63,7 +63,6 @@ const GeoapifyAutocomplete: React.FC<{
   };
 
   const onSelect = (value: any) => {
-    console.log("Select triggered");
     const props = value.properties as GeoJSON.GeoJsonProperties;
     if (props?.result_type === "amenity") {
       onPlaceSelect(

@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 export async function putData(review: schemaType): Promise<boolean> {
   try {
     const stringRev = JSON.stringify(review);
-    const res = await fetch(`${process.env.API_URL}/api/reviews/`, {
+    const res = await fetch(`${process.env.API_URL}/api/reviews`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
