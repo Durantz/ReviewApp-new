@@ -25,8 +25,8 @@ interface ReviewForm {
 }
 
 const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
-  const latValue = form.watch("geospatial.coordinates.0", 0);
-  const lonValue = form.watch("geospatial.coordinates.1", 0);
+  const latValue = form.watch("geospatial.coordinates.1", 0);
+  const lonValue = form.watch("geospatial.coordinates.0", 0);
 
   return (
     <Form {...form}>

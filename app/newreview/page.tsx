@@ -43,7 +43,6 @@ export default function AddReview() {
   });
 
   const onSubmit = async (values: schemaType) => {
-    console.log(values);
     const res = await putData(values);
     if (res) {
       router.push("/");
@@ -62,14 +61,14 @@ export default function AddReview() {
   ) => {
     zodForm.setValue("restaurant", restaurant);
     zodForm.setValue("address", address);
-    zodForm.setValue("geospatial.coordinates", [lat, lon]);
+    zodForm.setValue("geospatial.coordinates", [lon,lat]);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
     setMapCenter([lat, lon]);
   };
 
   const setCoords = (lat: number, lon: number) => {
-    zodForm.setValue("geospatial.coordinates", [lat, lon]);
+    zodForm.setValue("geospatial.coordinates", [lon, lat]);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
     setMapCenter([lat, lon]);

@@ -105,9 +105,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
   const [openPopover, setOpenPopover] = useState(false);
 
   const deleteMe = async (id: string) => {
-    console.log(id);
     const data = await deleteReview(id);
-    console.log(data);
     setOpenPopover(false);
   };
   const DynamicMap = useMemo(
@@ -152,7 +150,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
                     <PopoverContent className="w-fit">
                       <div className="flex flex-row gap-1 ">
                         <Link
-                          href={`https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.geospatial.coordinates[0]},${data.geospatial.coordinates[1]}`}
+                          href={`https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.geospatial.coordinates[1]},${data.geospatial.coordinates[0]}`}
                           target="_blank"
                           passHref
                         >
@@ -185,13 +183,17 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
           </CardHeader>
           <CardContent className="h-auto">
             <motion.div layout="position" className="h-40">
-              {data.geospatial.coordinates[0] == 0 && data.geospatial.coordinates[1] == 0 ? (
+              {data.geospatial.coordinates[0] == 0 &&
+              data.geospatial.coordinates[1] == 0 ? (
                 <div className=" flex flex-row items-center justify-center h-full rounded-md bg-slate-100 dark:bg-zinc-700">
                   <p className="text-center text-sm">Nessuna posizione</p>
                 </div>
               ) : (
                 <DynamicMap
-                  center={[data.geospatial.coordinates[0], data.geospatial.coordinates[1]]}
+                  center={[
+                    data.geospatial.coordinates[1],
+                    data.geospatial.coordinates[0],
+                  ]}
                   popupText={data.address}
                 />
               )}
@@ -366,5 +368,3 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
 };
 
 export default ReviewCard;
-
-// ? `https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.latitude},${data.longitude}`: `https://maps.apple.com/?daddr=${data.address}&t=r&dirflg=d`
