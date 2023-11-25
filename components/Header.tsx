@@ -28,7 +28,7 @@ export default function Header() {
             <h1 className="font-bold text-lg ">RECENSIONI FAZIOSE</h1>
           </Link>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row gap-1">
           {status === "authenticated" ? (
             <Button variant="ghost" size="icon" asChild>
               <Link href="/newreview" passHref>

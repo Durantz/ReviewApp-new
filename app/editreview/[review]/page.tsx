@@ -34,6 +34,10 @@ export default function EditReview({ params }: { params: { review: string } }) {
       rating: 0,
       approved: false,
       notes: "",
+      geospatial:{
+        type:"Point",
+        coordinates:[0,0]
+      },
       latitude: 0,
       longitude: 0,
     },
@@ -58,12 +62,14 @@ export default function EditReview({ params }: { params: { review: string } }) {
   ) => {
     zodForm.setValue("restaurant", restaurant);
     zodForm.setValue("address", address);
+    zodForm.setValue("geospatial.coordinates", [lat,lon]);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
     setMapCenter([lat, lon]);
   };
 
-  const setCoords = (lat: number, lon: number) => {
+  const setCoords = (lat: number, lon: number) => {    
+    zodForm.setValue("geospatial.coordinates", [lat,lon]);
     zodForm.setValue("latitude", lat);
     zodForm.setValue("longitude", lon);
     setMapCenter([lat, lon]);

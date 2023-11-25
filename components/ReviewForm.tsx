@@ -15,7 +15,7 @@ import StarRating from "./StarRating";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Separator } from "./ui/separator";
-import { Review, schemaType } from "@/types";
+import { schemaType } from "@/types";
 
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
@@ -25,8 +25,8 @@ interface ReviewForm {
 }
 
 const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
-  const latValue = form.watch("latitude", 0);
-  const lonValue = form.watch("longitude", 0);
+  const latValue = form.watch("geospatial.coordinates.0", 0);
+  const lonValue = form.watch("geospatial.coordinates.1", 0);
 
   return (
     <Form {...form}>
@@ -81,11 +81,11 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
                     variant={"destructive"}
                     className="h-4 text-xs w-auto"
                     onClick={() => {
-                      form.setValue("latitude", 0, {
+                      form.setValue("geospatial.coordinates.0", 0, {
                         shouldDirty: false,
                         shouldTouch: false,
                       });
-                      form.setValue("longitude", 0, {
+                      form.setValue("geospatial.coordinates.1", 0, {
                         shouldDirty: false,
                         shouldTouch: false,
                       });

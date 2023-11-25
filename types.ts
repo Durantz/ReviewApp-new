@@ -1,5 +1,4 @@
 import * as z from "zod";
-// import { Schema, model } from "mongoose";
 
 export const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
@@ -13,6 +12,10 @@ export const formSchema = z.object({
   rating: z.number(),
   approved: z.boolean(),
   notes: z.string().max(400),
+  geospatial: z.object({
+    type: z.string().default("Point"),
+    coordinates: z.array(z.number()),
+  }),
   latitude: z.number(),
   longitude: z.number(),
 });
@@ -20,7 +23,6 @@ export const formSchema = z.object({
 export type schemaType = z.infer<typeof formSchema>;
 
 export interface Review {
-  _id: string;
   restaurant: string;
   rating: number;
   reviewer: string;
@@ -30,10 +32,17 @@ export interface Review {
   ospitality: number;
   location: number;
   notes: string;
+  geospatial: {
+    type: string;
+    coordinates: [number, number];
+  };
   longitude: number;
   latitude: number;
   address: string;
   approved: boolean;
+}
+export interface DbReview extends Review {
+  _id: string;
 }
 
 export type DbUser = {

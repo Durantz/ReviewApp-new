@@ -12,24 +12,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvent,
-} from "react-leaflet";
-import { markerIcon } from "@/lib/markerIcon";
 import StarRating from "@/components/StarRating";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
-
-import { Review } from "@/types";
+import { DbReview } from "@/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { deleteReview } from "@/lib/functions";
-import { LatLng, LeafletMouseEvent } from "leaflet";
+import { Skeleton } from "./ui/skeleton";
 import dynamic from "next/dynamic";
 
 const googleIcon = (
@@ -106,12 +96,11 @@ const additionalData = {
 };
 
 interface ReviewCard {
-  data: Review;
+  data: DbReview;
   canEditDelete: boolean;
 }
 
 const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
-  const [center] = useState(new LatLng(data.latitude, data.longitude));
   const [active, setActive] = useState(false);
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -125,7 +114,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
     () =>
       dynamic(() => import("@/components/ReadOnlyDynamicMap"), {
         ssr: false,
-        loading: () => <p>A map is loading</p>,
+        loading: () => <Skeleton className="z-0 h-40 rounded-md" />,
       }),
     [],
   );
@@ -163,7 +152,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
                     <PopoverContent className="w-fit">
                       <div className="flex flex-row gap-1 ">
                         <Link
-                          href={`https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.latitude},${data.longitude}`}
+                          href={`https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${data.geospatial.coordinates[0]},${data.geospatial.coordinates[1]}`}
                           target="_blank"
                           passHref
                         >
@@ -196,13 +185,13 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
           </CardHeader>
           <CardContent className="h-auto">
             <motion.div layout="position" className="h-40">
-              {data.latitude == 0 && data.longitude == 0 ? (
+              {data.geospatial.coordinates[0] == 0 && data.geospatial.coordinates[1] == 0 ? (
                 <div className=" flex flex-row items-center justify-center h-full rounded-md bg-slate-100 dark:bg-zinc-700">
                   <p className="text-center text-sm">Nessuna posizione</p>
                 </div>
               ) : (
                 <DynamicMap
-                  center={[data.latitude, data.longitude]}
+                  center={[data.geospatial.coordinates[0], data.geospatial.coordinates[1]]}
                   popupText={data.address}
                 />
               )}
@@ -375,20 +364,6 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
     </>
   );
 };
-
-function MapController() {
-  const map = useMap();
-
-  const mapEvent = useMapEvent("click", (e: LeafletMouseEvent) => {
-    if (map.getZoom() == 17) {
-      map.setZoom(14, { duration: 3 });
-    } else {
-      map.setZoom(17, { duration: 3 });
-    }
-  });
-
-  return null;
-}
 
 export default ReviewCard;
 

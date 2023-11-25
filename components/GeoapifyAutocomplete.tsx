@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { Skeleton } from "./ui/skeleton";
 
 const autocompleteAnimation = {
   initial: {
@@ -47,7 +48,9 @@ const GeoapifyAutocomplete: React.FC<{
     () =>
       dynamic(() => import("@/components/DraggableMap"), {
         ssr: false,
-        loading: () => <p>A map is loading</p>,
+        loading: () => (
+          <Skeleton className="z-0 h-56 rounded-md w-full md:w-1/2" />
+        ),
       }),
     [],
   );
@@ -56,11 +59,11 @@ const GeoapifyAutocomplete: React.FC<{
   }, [position]);
 
   const coordChange = (lat: number, lon: number) => {
-    console.log("coordChange triggered");
     onCoordChange(lat, lon);
   };
 
   const onSelect = (value: any) => {
+    console.log("Select triggered");
     const props = value.properties as GeoJSON.GeoJsonProperties;
     if (props?.result_type === "amenity") {
       onPlaceSelect(
@@ -102,7 +105,8 @@ const GeoapifyAutocomplete: React.FC<{
             <GeoapifyContext apiKey={process.env.NEXT_PUBLIC_GEOAPIFY_TOKEN}>
               <GeoapifyGeocoderAutocomplete
                 placeholder="Cerca una località"
-                limit={2}
+                allowNonVerifiedHouseNumber
+                allowNonVerifiedStreet
                 debounceDelay={250}
                 lang="it"
                 placeSelect={onSelect}

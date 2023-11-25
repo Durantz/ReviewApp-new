@@ -2,10 +2,10 @@
 
 import { LayoutGroup } from "framer-motion";
 import ReviewCard from "@/components/ReviewCard";
-import { Review } from "@/types";
+import { DbReview } from "@/types";
 import { useSession } from "next-auth/react";
 
-const ReviewCardList: React.FC<{ reviews: Review[] }> = ({ reviews }) => {
+const ReviewCardList: React.FC<{ reviews: DbReview[] }> = ({ reviews }) => {
   const { data: session, status } = useSession();
 
   return (
