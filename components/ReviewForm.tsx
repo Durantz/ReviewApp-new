@@ -9,6 +9,8 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { Command, CommandGroup, CommandItem } from "./ui/command";
 import AnimatedCheckbox from "./AnimatedCheckbox";
 import { Textarea } from "./ui/textarea";
 import StarRating from "./StarRating";
@@ -16,6 +18,15 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Separator } from "./ui/separator";
 import { schemaType } from "@/types";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
+
+const types = [
+  { label: "Colazione", value: "colazione" },
+  { label: "Ristorante", value: "ristorante" },
+  { label: "Aperitivo", value: "aperitivo" },
+  { label: "Fast Food", value: "fastfood" },
+];
 
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
@@ -27,6 +38,7 @@ interface ReviewForm {
 const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
   const latValue = form.watch("geospatial.coordinates.1", 0);
   const lonValue = form.watch("geospatial.coordinates.0", 0);
+  const [typeOpen, setTypeOpen] = useState(false);
 
   return (
     <Form {...form}>
@@ -97,6 +109,86 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
                 </div>
               )}
               <FormMessage className="text-xs" />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-1 w-44">
+              <div className="flex flex-col space-y-2">
+                <FormLabel>Tipologia</FormLabel>
+                <Popover open={typeOpen}>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        color="primary"
+                        role="combobox"
+                        onClick={() => setTypeOpen(true)}
+                        className={cn(
+                          "dark:bg-card bg-zinc-100 dark:text-white border-primary justify-between",
+                          form.getFieldState(field.name).error &&
+                            "border-destructive",
+                          typeOpen && "border-2",
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            !field.value &&
+                              "text-zinc-300 dark:text-zinc-200/20",
+                          )}
+                        >
+                          {field.value
+                            ? types.find((type) => type.value === field.value)
+                                .label
+                            : "Seleziona un tipo"}
+                        </span>
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align="start"
+                    className="w-44 p-0"
+                    onInteractOutside={() => setTypeOpen(false)}
+                  >
+                    <Command>
+                      <CommandGroup>
+                        {types.map((type) => (
+                          <CommandItem
+                            value={type.label}
+                            key={type.value}
+                            onSelect={() => {
+                              form.setValue(
+                                field.name,
+                                field.value === type.value ? "" : type.value,
+                                {
+                                  shouldValidate: true,
+                                  shouldDirty: true,
+                                },
+                              );
+                              setTypeOpen(false);
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                type.value === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                            {type.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <FormMessage className="text-xs mt-1" />
             </FormItem>
           )}
         />

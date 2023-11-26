@@ -20,6 +20,7 @@ import { DbReview } from "@/types";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { deleteReview } from "@/lib/functions";
 import { Skeleton } from "./ui/skeleton";
+import IconBadge from "./IconBadge";
 import dynamic from "next/dynamic";
 
 const googleIcon = (
@@ -136,7 +137,8 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
           <CardHeader>
             <motion.div layout="position">
               <CardTitle>
-                <span className="flex flex-row items-center gap-2">
+                <span className="flex flex-row items-center gap-1">
+                  <IconBadge type={data.type} />
                   {data.restaurant}
                   {/* <Edit className="w-4 h-4 cursor-pointer" /> */}
                 </span>

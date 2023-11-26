@@ -3,6 +3,7 @@ import * as z from "zod";
 export const formSchema = z.object({
   restaurant: z.string().min(5, "Inserire il nome"),
   address: z.string().min(10, "Inserire l'indirizzo"),
+  type: z.string().min(1, "Selezionare una tipologia"),
   reviewer: z.string(),
   reviewerEmail: z.string(),
   quality: z.number(),
@@ -25,6 +26,7 @@ export type schemaType = z.infer<typeof formSchema>;
 export interface Review {
   restaurant: string;
   rating: number;
+  type: string;
   reviewer: string;
   reviewerEmail: string;
   quality: number;

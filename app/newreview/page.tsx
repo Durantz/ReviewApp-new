@@ -24,6 +24,7 @@ export default function AddReview() {
     defaultValues: {
       restaurant: "",
       address: "",
+      type:"",
       reviewer: "",
       reviewerEmail: "",
       quality: 0,

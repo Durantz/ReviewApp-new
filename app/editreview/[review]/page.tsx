@@ -26,6 +26,7 @@ export default function EditReview({ params }: { params: { review: string } }) {
       restaurant: "",
       address: "",
       reviewer: "",
+      type: "",
       reviewerEmail: "",
       quality: 0,
       location: 0,
