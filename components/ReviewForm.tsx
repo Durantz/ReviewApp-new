@@ -141,7 +141,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
                           )}
                         >
                           {field.value
-                            ? types.find((type) => type.value === field.value)
+                            ? types?.find((type) => type.value === field.value)
                                 .label
                             : "Seleziona un tipo"}
                         </span>
