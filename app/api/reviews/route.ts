@@ -11,30 +11,19 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const types = searchParams.get("t");
+    const users = searchParams.get("u");
     let data = null;
-    if (id) {
-      data = await fetch(
-        `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getReview?id=${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "API-Key": process.env.MONGODB_API_KEY!,
-          },
+    data = await fetch(
+      `https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getFilteredReviews?t=${types}&u=${users}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "API-Key": process.env.MONGODB_API_KEY!,
         },
-      );
-    } else {
-      data = await fetch(
-        "https://eu-central-1.aws.data.mongodb-api.com/app/reviewapp-xwles/endpoint/getAll",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "API-Key": process.env.MONGODB_API_KEY!,
-          },
-          cache: "no-store",
-        },
-      );
-    }
+        cache: "no-store",
+      },
+    );
     const reviews = await data.json();
     return NextResponse.json(reviews, { status: 200 });
   } catch (error) {

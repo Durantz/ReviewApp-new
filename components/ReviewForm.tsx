@@ -18,15 +18,9 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Separator } from "./ui/separator";
 import { schemaType } from "@/types";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { useState } from "react";
-
-const types = [
-  { label: "Colazione", value: "colazione" },
-  { label: "Ristorante", value: "ristorante" },
-  { label: "Aperitivo", value: "aperitivo" },
-  { label: "Fast Food", value: "fastfood" },
-];
+import { types } from "@/defaults";
 
 interface ReviewForm {
   form: UseFormReturn<schemaType>;
@@ -42,12 +36,15 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
 
   return (
     <Form {...form}>
-      <form className="space-y-2" onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        className="flex flex-col space-y-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FormField
           control={form.control}
           name="restaurant"
           render={({ field }) => (
-            <FormItem className="space-y-1">
+            <FormItem className="flex flex-col space-y-1">
               <FormLabel>Nome</FormLabel>
               <FormControl>
                 <Input
@@ -69,7 +66,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           control={form.control}
           name="address"
           render={({ field }) => (
-            <FormItem className="space-y-1">
+            <FormItem className="flex flex-col space-y-1">
               <FormLabel>Indirizzo</FormLabel>
               <FormControl>
                 <Input
@@ -116,8 +113,8 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           control={form.control}
           name="type"
           render={({ field }) => (
-            <FormItem className="flex flex-col space-y-1 w-44">
-              <div className="flex flex-col space-y-2">
+            <FormItem>
+              <div className="flex flex-col space-y-1">
                 <FormLabel>Tipologia</FormLabel>
                 <Popover open={typeOpen}>
                   <PopoverTrigger asChild>
@@ -128,7 +125,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
                         role="combobox"
                         onClick={() => setTypeOpen(true)}
                         className={cn(
-                          "dark:bg-card bg-zinc-100 dark:text-white border-primary justify-between",
+                          "w-44 dark:bg-card bg-zinc-100 dark:text-white border-primary justify-between",
                           form.getFieldState(field.name).error &&
                             "border-destructive",
                           typeOpen && "border-2",
@@ -192,12 +189,12 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2  gap-1 justify-between">
+        <div className="grid grid-cols-2 justify-between gap-2">
           <FormField
             control={form.control}
             name="quality"
             render={({ field }) => (
-              <FormItem className="space-y-1">
+              <FormItem className="flex flex-col space-y-1">
                 <FormLabel>Prodotti</FormLabel>
                 <FormControl>
                   <StarRating
@@ -219,7 +216,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             control={form.control}
             name="plates"
             render={({ field }) => (
-              <FormItem className="space-y-1">
+              <FormItem className="flex flex-col space-y-1">
                 <FormLabel>Piatti</FormLabel>
                 <FormControl>
                   <StarRating
@@ -241,7 +238,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             control={form.control}
             name="ospitality"
             render={({ field }) => (
-              <FormItem className="space-y-1">
+              <FormItem className="flex flex-col space-y-1">
                 <FormLabel>Ospitalità</FormLabel>
                 <FormControl>
                   <StarRating
@@ -263,7 +260,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             control={form.control}
             name="location"
             render={({ field }) => (
-              <FormItem className="space-y-1">
+              <FormItem className="flex flex-col space-y-1">
                 <FormLabel>Location</FormLabel>
                 <FormControl>
                   <StarRating
@@ -286,7 +283,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
           control={form.control}
           name="notes"
           render={({ field }) => (
-            <FormItem className="space-y-1">
+            <FormItem className="flex flex-col space-y-1">
               <FormLabel>Note</FormLabel>
               <FormControl>
                 <Textarea
@@ -298,12 +295,12 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             </FormItem>
           )}
         />
-        <Separator className="dark:bg-zinc-400" />
+        <Separator />
         <FormField
           control={form.control}
           name="rating"
           render={({ field }) => (
-            <FormItem className="space-y-1">
+            <FormItem className="flex flex-col space-y-1">
               <FormLabel>Punteggio Finale</FormLabel>
               <FormControl>
                 <StarRating
@@ -327,7 +324,7 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             control={form.control}
             name="approved"
             render={({ field }) => (
-              <FormItem className="space-y-1">
+              <FormItem className="flex flex-col space-y-1">
                 <FormLabel>Approvato da Spaccavacciuolo</FormLabel>
                 <FormControl>
                   <AnimatedCheckbox
@@ -345,17 +342,31 @@ const ReviewForm: React.FC<ReviewForm> = ({ form, onSubmit, onBack, role }) => {
             )}
           />
         ) : null}
-        <Button className="w-full" type="submit">
-          Aggiungi
-        </Button>
-        <Button
-          type="button"
-          variant={"outline"}
-          className="w-full"
-          onClick={onBack}
-        >
-          Indietro
-        </Button>
+        <div className="flex  sm:flex-row flex-col sm:justify-evenly items-center gap-1">
+          <Button
+            className="w-full sm:w-60"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? (
+              <span className="flex flex-row justify-center items-center gap-1">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Attendi...
+              </span>
+            ) : (
+              "Salva"
+            )}
+          </Button>
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="button"
+            variant={"outline"}
+            className="w-full sm:w-52"
+            onClick={onBack}
+          >
+            Indietro
+          </Button>
+        </div>
       </form>
     </Form>
   );

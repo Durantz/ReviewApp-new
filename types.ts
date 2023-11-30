@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const formSchema = z.object({
-  restaurant: z.string().min(5, "Inserire il nome"),
+  restaurant: z.string().min(3, "Inserire il nome"),
   address: z.string().min(10, "Inserire l'indirizzo"),
   type: z.string().min(1, "Selezionare una tipologia"),
   reviewer: z.string(),
