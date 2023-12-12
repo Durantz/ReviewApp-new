@@ -42,7 +42,7 @@ const ReviewCardList: React.FC = () => {
       {status === "authenticated" && (
         <>
           <SearchDialog />
-          <div className="snap-y snap-mandatory grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 justify-items-center md:items-start items-center w-auto">
+          <div className="max-h-[calc(100dvh)] flex-grow snap-y snap-mandatory overflow-y-scroll overscroll-y-none grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 justify-items-center md:items-start items-center">
             <LayoutGroup>
               {reviews &&
                 reviews.map((review) => {

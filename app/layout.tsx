@@ -28,12 +28,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(inter.className, " bg-cover bg-fixed")}>
+      <body className={cn(inter.className, "h-screen")}>
         <SessionProvider>
           <RecoilRootProvider>
             <ThemeProvider defaultTheme="light" attribute="class">
               <Header />
-              <div className="pt-16 pb-24 px-4 h-full">{children}</div>
+              <div className="px-4 flex flex-col h-[calc(100dvh)] pt-16 overflow-y-hidden">
+                {children}
+              </div>
               <ToasterWrapper />
             </ThemeProvider>
           </RecoilRootProvider>

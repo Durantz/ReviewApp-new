@@ -10,27 +10,37 @@ import {
   Circle,
 } from "react-leaflet";
 
-export default function DraggableMap({
+export default function RangeMap({
   setCoords,
   mapCenter,
+  range,
 }: {
   setCoords: (lat: number, lon: number) => void;
   mapCenter: [number, number];
+  range: number;
 }) {
-  const [center, setCenter] = useState(new LatLng(0, 0));
+  const [_mapCenter, _setMapCenter] = useState(new LatLng(0, 0));
+  const [_range, _setRange] = useState(10);
 
   useEffect(() => {
-    setCenter(new LatLng(mapCenter[0], mapCenter[1]));
+    console.log(mapCenter);
+    _setMapCenter(new LatLng(mapCenter[0], mapCenter[1]));
   }, [mapCenter]);
-  const setMapCoords = (lat: number, lon: number) => {
-    setCenter(new LatLng(lat, lon));
+
+  useEffect(() => {
+    console.log(range);
+    _setRange(range);
+  }, [range]);
+
+  const _setCoords = (lat: number, lon: number) => {
+    _setMapCenter(new LatLng(lat, lon));
     setCoords(lat, lon);
   };
 
   return (
     <div className="flex justify-center h-56 ">
       <MapContainer
-        className="z-0 h-full rounded-md w-full md:w-1/2"
+        className="z-0 h-full rounded-md w-full"
         center={new LatLng(mapCenter[0], mapCenter[1])}
         dragging
         touchZoom
@@ -44,10 +54,17 @@ export default function DraggableMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <MapController
-          coords={center}
-          setCoords={(lat, lon) => setMapCoords(lat, lon)}
+          coords={_mapCenter}
+          setCoords={(lat, lon) => _setCoords(lat, lon)}
         />
-        <Marker position={center} icon={markerIcon}></Marker>
+        <Marker position={_mapCenter} icon={markerIcon}></Marker>
+        <Circle
+          center={_mapCenter}
+          radius={_range}
+          color="green"
+          interactive={false}
+          bubblingMouseEvents={false}
+        />
       </MapContainer>
     </div>
   );

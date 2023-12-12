@@ -122,7 +122,7 @@ const ReviewCard: React.FC<ReviewCard> = ({ data, canEditDelete }) => {
       <motion.div
         layout
         layoutId={"" + data._id}
-        className="w-full md:w-[450px] snap-center"
+        className="w-full md:w-[450px] snap-start"
       >
         <Card className="relative group backdrop-blur-xl">
           {data.approved ? (

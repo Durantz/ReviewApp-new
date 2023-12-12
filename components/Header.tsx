@@ -21,7 +21,7 @@ export default function Header() {
   const { data: session, status } = useSession();
 
   return (
-    <div className="z-10 fixed w-full items-center">
+    <div className="z-10  fixed w-full items-center">
       <div className="flex h-14 justify-between items-center left-0 top-0 border-b px-4 pb-4 pt-4 backdrop-blur-xl lg:p-4">
         <div className="flex flex-row gap-1 items-center">
           <Link href="/" passHref>

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -16,29 +15,53 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Label } from "./ui/label";
 import { cn } from "@/lib/utils";
 import { Command, CommandGroup, CommandItem } from "./ui/command";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { types } from "@/defaults";
-import { filterState, usersState, reviewsState } from "@/states";
+import { filterState, usersState } from "@/states";
 import { useRecoilState, useRecoilValue, useResetRecoilState } from "recoil";
-import { getAllData } from "@/lib/functions";
+import dynamic from "next/dynamic";
+import { Input } from "./ui/input";
+import { Switch } from "./ui/switch";
+import { AnimatePresence, motion } from "framer-motion";
 
+const RangeMap = dynamic(() => import("./RangeMap"), { ssr: false });
+
+const defaultFilter = {
+  types: [] as { label: string; value: string }[],
+  users: [] as { name: string; email: string }[],
+  nearby: { lat: 0, lon: 0, radius: 10 } as {
+    lat: number;
+    lon: number;
+    radius: number;
+  },
+};
 export default function SearchDialog() {
   const [openRestaurantTypes, setOpenRestaurantTypes] = useState(false);
   const [openUsers, setOpenUsers] = useState(false);
-  const [localFilter, setLocalFilter] = useState({
-    types: [] as { label: string; value: string }[],
-    users: [] as { name: string; email: string }[],
-  });
+  const [openLocation, setOpenLocation] = useState(false);
+  const [localFilter, setLocalFilter] = useState(defaultFilter);
   const [filter, setFilter] = useRecoilState(filterState);
   const resetFilter = useResetRecoilState(filterState);
   const users = useRecoilValue(usersState);
-  const [reviews, setReviews] = useRecoilState(reviewsState);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLocalFilter((localFilter) => ({
+        ...localFilter,
+        nearby: {
+          ...localFilter.nearby,
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        },
+      }));
+    });
+  }, []);
 
   return (
-    <div className="flex flex-row justify-start items-center mb-2">
+    <div className="flex flex-row justify-start items-center mb-2 snap-start">
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="w- px-2" size="icon" variant="secondary">
+          <Button className="w-fit px-2" size="icon" variant="secondary">
             <Search className="w-5 h-5 mr-2" />
             Cerca
           </Button>
@@ -193,6 +216,66 @@ export default function SearchDialog() {
                 </PopoverContent>
               </Popover>
             </div>
+            <div className="flex flex-col space-y-1 w-full">
+              <div className="flex flex-row items-center gap-2">
+                <Label htmlFor="location">Vicinanze</Label>
+                <Switch
+                  id="location"
+                  checked={openLocation}
+                  onCheckedChange={() => setOpenLocation(!openLocation)}
+                />
+              </div>
+              <AnimatePresence mode="wait">
+                {openLocation && (
+                  <motion.div
+                    className="flex flex-col space-y-2 w-full"
+                    animate={{
+                      height: "auto",
+                      opacity: 1,
+                      transition: { opacity: { delay: 0.2 } },
+                    }}
+                    initial={{ height: 0, opacity: 0 }}
+                    exit={{
+                      height: 0,
+                      opacity: 0,
+                      transition: { height: { delay: 0.2 } },
+                    }}
+                  >
+                    <Input
+                      className="w-20"
+                      type="number"
+                      value={localFilter.nearby.radius}
+                      onChange={(e) =>
+                        setLocalFilter((localFilter) => ({
+                          ...localFilter,
+                          nearby: {
+                            ...localFilter.nearby,
+                            radius: Number(e.target.value),
+                          },
+                        }))
+                      }
+                    />
+                    <RangeMap
+                      mapCenter={[
+                        localFilter.nearby.lat,
+                        localFilter.nearby.lon,
+                      ]}
+                      range={localFilter.nearby.radius}
+                      setCoords={(lat, lon) => {
+                        setLocalFilter((localFilter) => ({
+                          ...localFilter,
+                          nearby: {
+                            ...localFilter.nearby,
+                            lat: lat,
+                            lon: lon,
+                          },
+                        }));
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
           <DialogFooter>
             <div className="w-full flex flex-row justify-between">
@@ -204,9 +287,17 @@ export default function SearchDialog() {
                   Esegui
                 </Button>
               </DialogClose>
-              <Button variant="secondary" onClick={() => resetFilter()}>
-                Resetta
-              </Button>
+              <DialogClose>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setLocalFilter(defaultFilter);
+                    resetFilter();
+                  }}
+                >
+                  Resetta
+                </Button>
+              </DialogClose>
             </div>
           </DialogFooter>
         </DialogContent>
